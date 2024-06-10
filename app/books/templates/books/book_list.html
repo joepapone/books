@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<h2>Books</h2>
+	<hr>
+	<div  class="list-controls">
+		<a href="{% url 'book-create' %}"><i class="bi bi-plus-circle"></i> Create</a>
+	</div>
+	{% if object_list %}
+	<ul class="list">
+		{% for book in object_list %}
+			<li><a href="{%url 'book' book.id %}">{{ book.title }}</a>
+				 <div  class="list-controls">
+				 	<a href="{%url 'book-delete' book.id %}"><i class="bi bi-trash"></i></a>
+					<a href="{%url 'book-update' book.id %}"><i class="bi bi-pencil-square"></i></a>
+		         </div>
+		    </li>
+		{% endfor %}
+	{% endif %}
+	</ul>
+</div>
+{% endblock content %}

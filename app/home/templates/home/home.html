@@ -1,0 +1,14 @@
+{%extends 'base.html'%}
+
+{%load static %}
+
+{%block content%}
+	<section class="feature">
+		<div class="feature-content">
+			<h1>Enterprise ERP</h1>
+			<p>{{description}}</p>	
+			<a class="btn btn-primary cta" href="">Get Started</a>
+		</div>
+		<img src="{%static 'images/erp.png'%}" alt="" class="feature-image">
+	</section>
+{%endblock content%}

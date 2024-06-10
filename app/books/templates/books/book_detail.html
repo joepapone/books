@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+ <article class="list">
+	<header>
+		<h2>{{ book.title }}</h2>
+	</header>
+	<p><b>ISBN: </b>{{ book.isbn }}</p>
+	<p><b>Author:</b>{{ book.author.name }}</p>
+	<p><b>Edition:</b>{{ book.edition }}</p>
+	<p><b>Publisher::</b>{{ book.publisher.name }}</p>
+</article>
+{% endblock content %}

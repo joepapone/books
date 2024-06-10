@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<h2>Publisher</h2>
+	<hr>
+	<div  class="list-controls">
+		<a href="{% url 'publisher-create' %}"><i class="bi bi-plus-circle"></i> Create</a>
+	</div>
+	{% if object_list %}
+	<ul class="list">
+		{% for publisher in object_list %}
+			<li><a href="{%url 'publisher' publisher.id %}">{{ publisher.name }}</a>
+				 <div  class="list-controls">
+				 	<a href="{%url 'publisher-delete' publisher.id %}"><i class="bi bi-trash"></i></a>
+					<a href="{%url 'publisher-update' publisher.id %}"><i class="bi bi-pencil-square"></i></a>
+		         </div>
+		    </li>
+		{% endfor %}
+	{% endif %}
+	</ul>
+</div>
+{% endblock content %}
