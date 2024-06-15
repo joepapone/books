@@ -13,6 +13,8 @@
             {% endif %}
         {% endfor %}
         <input type="submit" value="Login" class="btn btn-primary full-width">
+        <input type="hidden" name="next" value="{{ next }}">
+
         <hr>
         <p class="text-center">Forgot your password <a href="{% url 'password_reset' %}">Reset Password</a></p>
         <p class="text-center">Don't have a account? <a href="{% url 'register' %}">Join Now</a></p>

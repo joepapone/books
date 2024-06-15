@@ -1,19 +1,17 @@
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic.edit import FormView
-from django.views.generic import RedirectView
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, logout
-from django.contrib.auth.models import User
+from django.views.generic import ListView, RedirectView
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from django.views.generic.detail import DetailView
 from django.contrib import messages
-from .forms import RegisterForm
-
+from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
-from .models import Profile
-from .forms import RegisterForm, UserUpdateForm, ProfileUpdateForm
-from django.views import View
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.models import User
+
+from users.models import Profile
+from users.forms import RegisterForm, UserUpdateForm, ProfileUpdateForm
 
 
 class User_RegisterView(FormView):
@@ -63,6 +61,9 @@ class DepartmentCreate(LoginRequiredMixin, CreateView):
   '''         
                
 class User_Profile(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'redirect_to'
+
     def get(self, request):
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=request.user.profile)
@@ -114,3 +115,49 @@ class User_Profile(LoginRequiredMixin, View):
             messages.error(request,'Error updating you profile')
             
             return render(request, 'users/profile.html', context)
+        
+# --- User --- #
+class UserList(LoginRequiredMixin, ListView):
+    model = User
+    context_object_name = 'users'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = context['users']
+        return context
+
+
+class UserDetail(LoginRequiredMixin, DetailView):
+    model = User
+    context_object_name = 'user'
+
+
+class UserCreate(LoginRequiredMixin, CreateView):
+    model = User
+    fields = ['isbn','title', 'copyright', 'publisher', 'edition']
+    success_url = reverse_lazy('users')
+
+    def form_valid(self, form):
+        messages.success(self.request, "The user was created successfully.")
+        return super(UserCreate,self).form_valid(form)
+
+
+class UserUpdate(LoginRequiredMixin, UpdateView):
+    model = User
+    fields = ['name','description']
+    success_url = reverse_lazy('users')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "The user was updated successfully.")
+        return super(UserUpdate,self).form_valid(form)
+
+
+class UserDelete(LoginRequiredMixin, DeleteView):
+    model = User
+    context_object_name = 'user'
+    success_url = reverse_lazy('users')
+    
+    def form_valid(self, form):
+        messages.success(self.request, "The user was deleted successfully.")
+        return super(UserDelete,self).form_valid(form)
+

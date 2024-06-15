@@ -2,13 +2,14 @@
 
 {%load static %}
 
-<title>{% block title %}My amazing index{% endblock %}</title>
+<title>{% block title %}My amazing about{% endblock %}</title>
 
 {%block content%}
 	<section class="feature">
 		<div class="feature-content">
-			<h1>Index page</h1>
-			<p>{{description}}</p>	
+			<h1>About page</h1>
+			<p>{{description}}</p>
+			<br>
 			<a class="btn btn-primary cta" href="">Get Started</a>
 		</div>
 		<img src="{%static 'images/erp.png'%}" alt="" class="feature-image">

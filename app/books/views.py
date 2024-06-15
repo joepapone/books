@@ -1,16 +1,23 @@
-from django.shortcuts import render
-
-from django.views.generic import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
+from django.views.generic import ListView, RedirectView
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from django.views.generic.detail import DetailView
 from django.contrib import messages
+from django.contrib.auth import login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.models import User
+
 from books.models import Book, Author, Publisher
 
 
 # --- Books --- #
 class BookList(LoginRequiredMixin, ListView):
+    login_url = "/login/"
+    redirect_field_name = "redirect_to"
+
     model = Book
     context_object_name = 'books'
     

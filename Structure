@@ -1,0 +1,20 @@
+myproject/
+├── apps/
+│   ├── account/
+│   ├── blog/
+│   ├── core/
+│   └── store/
+├── media/
+├── myproject/
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── static/
+└── templates/
+    ├── account/
+    ├── blog/
+    ├── components/
+    ├── core/
+    ├── store/
+    └── base.html
