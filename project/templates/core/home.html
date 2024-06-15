@@ -1,0 +1,28 @@
+{%extends 'base.html'%}
+
+{%load static %}
+
+{% block title %}My amazing home{% endblock %}
+
+{% block navbar %}
+	{% if request.user.is_authenticated %}
+	<li class="dropdown">
+		<a href="{% url 'books' %}" class="dropbtn">Books</a>
+		<div class="dropdown-content">
+			<a href="{% url 'authors' %}">Authors</a>
+			<a href="{% url 'publishers' %}">Publishers</a>
+			<a href="">Categories</a>
+		</div>
+	</li>
+	{% endif %}
+{% endblock navbar %}
+
+{%block content%}
+	<section class="feature">
+		<div class="feature-content">
+			<h1>Home page</h1>
+			<p>{{description}}</p>	
+			<img src="{%static 'images/erp.png'%}" alt="" class="feature-image">
+		</div>
+	</section>
+{%endblock content%}
