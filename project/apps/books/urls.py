@@ -1,5 +1,5 @@
 from django.urls import path
-from books.views import BookList, BookDetail, BookCreate, BookUpdate, BookDelete, \
+from apps.books.views import BookList, BookDetail, BookCreate, BookUpdate, BookDelete, \
      AuthorList, AuthorDetail, AuthorCreate, AuthorUpdate, AuthorDelete, \
      PublisherList, PublisherDetail, PublisherCreate, PublisherUpdate, PublisherDelete
 

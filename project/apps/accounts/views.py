@@ -10,8 +10,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User
 
-from accounts.models import Profile
-from accounts.forms import AccountRegisterForm, AccountUpdateForm, ProfileUpdateForm
+from apps.accounts.models import Profile
+from apps.accounts.forms import AccountRegisterForm, AccountUpdateForm, ProfileUpdateForm
 
 
 class Account_RegisterView(FormView):

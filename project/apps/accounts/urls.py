@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import Account_LoginView, Account_LogoutView, Account_RegisterView, Account_Profile
+
+from apps.accounts.views import Account_LoginView, Account_LogoutView, Account_RegisterView, Account_Profile
 
 from django.contrib.auth.views import (
     PasswordResetView, 

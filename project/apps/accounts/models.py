@@ -4,7 +4,7 @@ from PIL import Image
 from pathlib import Path
 
 # Profile image file name
-def content_file_name(instance, filename):
+def image_file_path(instance, filename):
     # Define profile image file name
     profile_image = f'profile_{instance.user.id}.png'
     path = Path(instance.avatar.path).cwd() / 'media/profile_avatars' / profile_image
@@ -18,11 +18,7 @@ def content_file_name(instance, filename):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    avatar = models.ImageField(
-        default='avatar.jpg', # default avatar
-        upload_to=content_file_name # dir to store the image
-    )
+    avatar = models.ImageField(default='avatar.jpg', upload_to=image_file_path)
 
     def __str__(self):
         return f'{self.user.username} Profile'

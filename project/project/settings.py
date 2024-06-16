@@ -31,7 +31,6 @@ ALLOWED_HOSTS = [
 ]
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,9 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',
-    'core',
-    'books',
+    'apps.accounts',
+    'apps.core',
+    'apps.books',
 ]
 
 MIDDLEWARE = [
@@ -117,6 +116,26 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Globalization Settings
+
+LANGUAGES = [
+
+       ('en', 'English'), 
+       ('pt', 'Portuguese'), 
+       ('fr', 'French'), 
+       ('es', 'Spanish'), 
+       ('de', 'German'), 
+       ('ar', 'Arabic'), 
+       ('he', 'Hebrew'),
+]
+
+LANGUAGES_BIDI = ['pt', 'es']
+
+LOCALE_PATHS = [
+    "/home/www/project/common_files/locale",
+    "/var/local/translations/locale",
+]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -127,7 +146,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Settings for user profile images
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = Path(BASE_DIR, 'media') #BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

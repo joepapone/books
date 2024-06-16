@@ -1,0 +1,9 @@
+Todo list:
+
+- default authentication backend - Brute force protection required
+- User views.py - Profile view create new profile with new user (DONE)
+- Users admin.py register (momment)?  (DONE)
+- Coupling clild app html menus to base html (DONE)
+- About page (DONE)
+
+<title>My Library</title>

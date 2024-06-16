@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User
 
-from books.models import Book, Author, Publisher
+from apps.books.models import Book, Author, Publisher
 
 
 # --- Books --- #
@@ -44,7 +44,7 @@ class BookCreate(LoginRequiredMixin, CreateView):
 
 class BookUpdate(LoginRequiredMixin, UpdateView):
     model = Book
-    fields = ['name','description']
+    fields = ['isbn','title', 'copyright', 'publisher', 'edition']
     success_url = reverse_lazy('books')
     
     def form_valid(self, form):
@@ -59,7 +59,7 @@ class BookDelete(LoginRequiredMixin, DeleteView):
     
     def form_valid(self, form):
         messages.success(self.request, "The book was deleted successfully.")
-        return super(AuthorDelete,self).form_valid(form)
+        return super(BookDelete,self).form_valid(form)
 
 
 # --- Authors --- #
