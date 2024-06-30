@@ -1,14 +1,15 @@
-{%load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {%load static %}
         <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-        <title>{% block title %}Mylibrary{% endblock %}</title>
+        {% block title %}
+        <title>Mylibrary</title>
+        {% endblock %}
     </head>
-
     <body>
         <header class="header">
             <a href="#"><img class="logo" src="{% static 'images/logo.png' %}" alt="logo"></a>
@@ -20,8 +21,23 @@
                 {% else %}
                 <li class="active"><a href="{%url 'index'%}"><i class="bi bi-house-fill"> Home </i></a></li>
                 {% endif %}
+
                 {% block navbar %}
+                {% if request.user.is_authenticated %}
+                <li class="dropdown">
+                    <a href="" class="dropbtn">Library</a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'books' %}">Books</a>
+                        <a href="{% url 'authors' %}">Authors</a>
+                        <a href="{% url 'publishers' %}">Publishers</a>
+                        <a href="{% url 'genres' %}">Genres</a>
+                        <a href="{% url 'collections' %}">Collections</a>
+                        <a href="{% url 'sections' %}">Sections</a>
+                    </div>
+                </li>
+                {% endif %}
                 {% endblock navbar %}
+
                 <li><a href="{% url 'about' %}">About</a></li>
                 <li class="right">
                     {% if request.user.is_authenticated %}
@@ -46,7 +62,6 @@
                 </li>
             </ul>
         </header>
-
         <main class="main">
             <div class="container">
             {% if messages %}
@@ -62,14 +77,11 @@
             </div>
 
         </main>
-        
         <footer class="footer">
             <div class="container">
                 <p>Mybooks</p>
                 <p>&copy; Copyright {% now "Y" %} by José Ferreira</p>
             </div>
         </footer>
-
     </body>
-
 </html>

@@ -5,6 +5,7 @@
   --color-body: #ffffff;
   --color-header: #253f85;
   --color-nav: #38444d;
+  --color-load-button: #2e6357;
   --color-footer: #ced4da;
   --color-primary: #1e384d;
   --color-secondary: #38444d;
@@ -287,6 +288,7 @@ form > * {
 }
 
 form > input[type='submit'],
+form > input[type='file'],
 form > button {
   margin: 1rem 0;
 }
@@ -318,9 +320,10 @@ hr {
 }
 
 input[type='text'],
+input[type='number'],
 input[type='email'],
 input[type='password'],
-input[type='file'],
+select,
 textarea {
   border-radius: var(--border-radius);
   border: solid 1px var(--color-gray);
@@ -332,19 +335,21 @@ textarea {
   max-height: 7rem;
 }
 
-input, button, textarea {
+input, select, textarea, button {
   font: inherit;
 }
 
 input[type='text']:focus,
+input[type='number']:focus,
 input[type='email']:focus,
 input[type='password']:focus,
-input[type='file']:focus,
+select:focus,
 textarea:focus {
   outline: 0;
   box-shadow:  0 0 0 0.125rem rgb(0 209 178 / 25%);
   border: solid 1px var(--color-input);
 }
+
 
 /* --- Button --- */
 
@@ -384,6 +389,69 @@ textarea:focus {
   outline: 0;
   box-shadow: 0 0 0 0.125rem rgb(238, 57, 76, 25%);
 }
+
+
+.btn-load {
+  border: solid 1px var(--color-primary);
+  color: var(--color-dark);
+  margin: auto;
+}
+
+
+.btn input[type='file'] {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  width: 1px;
+}
+
+
+/*
+.btn input[type='file'] {
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  width: 1px;
+}
+
+
+.btn input[type='file'] + .label {
+  background-color: #d1d1d1;
+  color: black;
+  padding: 12px 35px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-block;
+}
+
+.btn input[type='file'] {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.btn input[type='file']:focus + .label:focus,
+.btn input[type='file']:hover + .label:hover {
+  background-color: #c2c2c2;
+}
+
+.btn input[type='file']:hover + .label:hover,
+.btn .input[type='file']:focus + .label:focus {
+  outline: 1px solid #000;
+  outline-style: auto;
+}
+
++/
 
 /* --- Alert --- */
 .alert {
@@ -485,6 +553,12 @@ textarea:focus {
   .feature-content .cta {
     align-self: center;
   }
+}
+
+.image {
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* --- list --- */

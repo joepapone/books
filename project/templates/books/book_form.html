@@ -2,9 +2,9 @@
 
 {% block content %}
 <div class="center-panel">
-	<form method="post" novalidate class="form-card">
+	<form method="POST" enctype="multipart/form-data" class="form-card">
 	 	{%csrf_token %}
-	 	<h2>{% if book %} Update {% else %} Create {% endif %} book</h2>
+	 	<h2>{% if book %} Update {% else %} Add {% endif %} book</h2>
 		{% for field in form %}
 			<label class="label">{{ field.label_tag }}</label>
 			{{ field }}
@@ -12,6 +12,27 @@
 				<small class="error">{{ field.errors|striptags  }}</small> 
 			{% endif %}
 		{% endfor %}
+		<br>
+		<div class="form-buttons">
+			<div class="btn btn-load">
+				<label for="image">Select image</label>
+				<input type="file" id="image" name="image"
+				accept=".jpeg, .png"
+				onchange="document.getElementById('book-image').src = window.URL.createObjectURL(this.files[0])"/>
+			</div>
+		</div>
+		<br>
+		<div class="image">
+			{% if book.image %}
+			<img id="book-image" src="{{ book.image.url }}" alt="{{ book.id }}" alt="image"
+			accept=".jpeg, .png" width="200" height="300"/>
+			{% else %}
+			{%load static %}
+			<img id="book-image" src="{% static 'images/book.png' %}" alt="{{ book.id }}" alt="image"
+			accept=".jpeg, .png" width="200" height="300"/>
+			{% endif %}
+		</div>
+		<br>
 		<div class="form-buttons">
 			<input type="submit" value="Save" class="btn btn-primary"/>
 			<a href="{% url 'books' %}" class="btn btn-outline">Cancel</a>

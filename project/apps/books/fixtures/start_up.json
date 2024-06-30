@@ -1,0 +1,9 @@
+[
+    {
+      "model": "books.author",
+      "pk": 1,
+      "fields": {
+        "name": "None"
+      }
+    }
+  ]

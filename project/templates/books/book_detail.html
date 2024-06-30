@@ -6,9 +6,17 @@
 		<h2>{{ book.title }}</h2>
 	</header>
 	<p><b>ISBN: </b>{{ book.isbn }}</p>
-	<p><b>Author:</b>{{ book.author.name }}</p>
-	<p><b>Edition:</b>{{ book.edition }}</p>
-	<p><b>Publisher::</b>{{ book.publisher.name }}</p>
+	<p><b>Author: </b>{{ book.author.first_name }} {{ book.author.last_name }}</p>
+	<p><b>Publisher: </b>{{ book.publisher.name }}</p>
+	<p><b>Edition: </b>{{ book.edition }}</p>
+	<p><b>Category: </b>{{ book.category }}</p>
+	<p><b>Genre: </b>{{ book.genre }}</p>
+	<p><b>Language: </b>{{ book.language }}</p>
+	{% if book.image %}
+	<img src="{{ book.image.url }}" alt="{{ book.title }}" class="image"  accept=".png" width="200" height="300"/>
+	{% endif %}
+	<br>
+	<p><b>Comments:</b>{{ book.comments}}</p>
 	<br>
 	<a class="btn btn-primary cta" href="{% url 'books' %}"> « Back </a>
 </article>

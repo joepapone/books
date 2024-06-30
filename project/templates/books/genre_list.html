@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<h2>Genres</h2>
+	<hr>
+	<div  class="list-controls">
+		<a href="{% url 'genre-add' %}"><i class="bi bi-plus-circle"></i> Add</a>
+	</div>
+	{% if object_list %}
+	<ul class="list">
+		{% for genre in object_list %}
+			<li>{{ genre.name }}
+				 <div  class="list-controls">
+				 	<a href="{%url 'genre-delete' genre.id %}"><i class="bi bi-trash"></i></a>
+					<a href="{%url 'genre-update' genre.id %}"><i class="bi bi-pencil-square"></i></a>
+		         </div>
+		    </li>
+		{% endfor %}
+	{% endif %}
+	</ul>
+</div>
+{% endblock content %}

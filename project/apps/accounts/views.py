@@ -100,6 +100,8 @@ class Account_Profile(LoginRequiredMixin, View):
             instance=request.user.profile
         )
 
+        print(f"Files profile: {request.FILES}")
+
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()

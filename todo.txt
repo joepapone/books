@@ -6,4 +6,5 @@ Todo list:
 - Coupling clild app html menus to base html (DONE)
 - About page (DONE)
 
-<title>My Library</title>
+- File storage
+- Handle ForeignKey models.RESTRICT errors

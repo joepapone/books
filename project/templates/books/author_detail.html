@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 
-{% block navbar %}
-	{% if request.user.is_authenticated %}
-	<li class="active"><a href="{%url 'home'%}"><i class="bi bi-house-fill"> Home </i></a></li>
-	{% endif %}
-	<li><a href="{% url 'about' %}">About</a></li>
-{% endblock navbar %}
-
 {% block content %}
  <article class="list">
 	<header>
-		<h2>{{ author.name }}</h2>
+		<h2>{{ author.first_name }} {{ author.last_name }}</h2>
 	</header>
-	<p>{{author.description}}</p>
+	<p><b>Born:</b> {{author.date_of_birth}}</p>
+	<p><b>Died:</b>{{ field.label_tag }} {{author.date_of_death}}</p>
+	<p><b>Summary:</b></p>
+	<p>{{author.summary}}</p>
+	<br>
+	{% if author.headshot %}
+	<img src="{{ author.headshot.url }}" alt="{{ author.headshot }}" class="image"  accept=".png" width="200" height="200"/>
+	{% endif %}
+	<br>
 	<br>
 	<a class="btn btn-primary cta" href="{% url 'authors' %}"> « Back </a>
 </article>

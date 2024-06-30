@@ -2,9 +2,9 @@
 
 {% block content %}
 <div class="center-panel">
-	<form method="post" novalidate class="form-card">
+	<form method="POST" enctype="multipart/form-data" class="form-card">
 	 	{%csrf_token %}
-	 	<h2>{% if publisher %} Update {% else %} Create {% endif %} publisher</h2>
+	 	<h2>{% if publisher %} Update {% else %} Add {% endif %} publisher</h2>
 		{% for field in form %}
 			<label class="label">{{ field.label_tag }}</label>
 			{{ field }}

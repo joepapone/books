@@ -2,9 +2,9 @@
 
 {% block content %}
 <div class="center-panel">
-	<form method="post" novalidate class="form-card">
+	<form method="POST" enctype="multipart/form-data" class="form-card">
 	 	{%csrf_token %}
-	 	<h2>{% if author %} Update {% else %} Create {% endif %} author</h2>
+	 	<h2>{% if author %} Update {% else %} Add {% endif %} author</h2>
 		{% for field in form %}
 			<label class="label">{{ field.label_tag }}</label>
 			{{ field }}
@@ -12,6 +12,27 @@
 				<small class="error">{{ field.errors|striptags  }}</small> 
 			{% endif %}
 		{% endfor %}
+		<br>
+		<div class="form-buttons">
+			<div class="btn btn-load">
+				<label for="headshot">Select image</label>
+				<input type="file" id="headshot" name="headshot"
+				accept=".jpeg, .png"
+				onchange="document.getElementById('headshot-image').src = window.URL.createObjectURL(this.files[0])"/>
+			</div>
+		</div>
+		<br>
+		<div class="image">
+			{% if author.headshot %}
+			<img id="headshot-image" src="{{ author.headshot.url }}" alt="{{ author.first_name }} {{ author.last_name }}" alt="headshot-image"
+			accept=".jpeg, .png" width="200" height="200"/>
+			{% else %}
+			{%load static %}
+			<img id="headshot-image" src="{% static 'images/author.png' %}" alt="{{ author.first_name }} {{ author.last_name }}" alt="headshot-image"
+			accept=".jpeg, .png" width="200" height="200"/>
+			{% endif %}
+		</div>
+		<br>
 		<div class="form-buttons">
 			<input type="submit" value="Save" class="btn btn-primary"/>
 			<a href="{% url 'authors' %}" class="btn btn-outline">Cancel</a>
