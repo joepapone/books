@@ -115,6 +115,9 @@ a:hover {
 
 
 /* --- Top nav bar links --- */
+
+
+
 .topnav li {
   float: left;
   background-color: var(--color-secondary);
@@ -129,7 +132,8 @@ a:hover {
 	background-color: 	rgb(30, 65, 95);
 }
 
-.topnav li a, .topnav .dropbtn {
+.topnav li a {
+  position: relative;
   display: inline-block;
   color: white;
   text-align: center;
@@ -141,8 +145,26 @@ a:hover {
   background-color: var(--color-secondary-hover);
 }
 
-.topnav li.dropdown {
+.topnav .dropdown {
+  position: relative;
   display: inline-block;
+}
+
+.topnav .dropdown.right {
+  float: right;
+}
+
+.topnav .dropdown.left {
+  float: left;
+}
+
+.topnav .dropbtn {
+  background-color: var(--color-secondary);
+  color: white;
+  padding: 14px 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
 }
 
 .topnav .dropdown-content {

@@ -73,6 +73,7 @@ class BookDelete(LoginRequiredMixin, DeleteView):
 class AuthorList(LoginRequiredMixin, ListView):
     model = Author
     context_object_name = 'authors'
+    paginate_by = 2
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -83,6 +84,11 @@ class AuthorList(LoginRequiredMixin, ListView):
 class AuthorDetail(LoginRequiredMixin, DetailView):
     model = Author
     context_object_name = 'author'
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorDetail, self).get_context_data(**kwargs)
+        context['books'] = Book.objects.filter(author=self.object).order_by('title')
+        return context
 
 
 class AuthorCreate(LoginRequiredMixin, CreateView):
