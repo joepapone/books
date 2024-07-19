@@ -4,20 +4,6 @@
 
 {% block title %}My amazing home{% endblock %}
 
-{% block navbar %}
-	{% if request.user.is_authenticated %}
-	<li class="dropdown">
-		<a href="" class="dropbtn">Menu</a>
-		<div class="dropdown-content">
-			<a href="{% url 'books' %}">Books</a>
-			<a href="{% url 'authors' %}">Authors</a>
-			<a href="{% url 'publishers' %}">Publishers</a>
-			<a href="">Categories</a>
-		</div>
-	</li>
-	{% endif %}
-{% endblock navbar %}
-
 {%block content%}
 	<section class="feature">
 		<div class="feature-content">

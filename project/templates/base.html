@@ -11,79 +11,49 @@
         {% endblock %}
     </head>
     <body>
+        
         <header class="header">
             <a href="#"><img class="logo" src="{% static 'images/logo.png' %}" alt="logo"></a>
             <h1>My Website</h1>
-
-            <ul class="topnav">
-                {% if request.user.is_authenticated %}
-                <li class="active"><a href="{%url 'home'%}"><i class="bi bi-house-fill"> Home </i></a></li>
-                {% else %}
-                <li class="active"><a href="{%url 'index'%}"><i class="bi bi-house-fill"> Home </i></a></li>
-                {% endif %}
-
-                {% block navbar %}
-                <li class="left">
+            <nav class="nav">
+                <ul class="nav-menu">
                     {% if request.user.is_authenticated %}
-                    <div class="dropdown left">
-                        <button class="dropbtn">Library</button>
-                        <div class="dropdown-content">
-                            <div class="dropdown-content">
-                                <a href="{% url 'books' %}">Books</a>
-                                <a href="{% url 'authors' %}">Authors</a>
-                                <a href="{% url 'publishers' %}">Publishers</a>
-                                <a href="{% url 'genres' %}">Genres</a>
-                                <a href="{% url 'collections' %}">Collections</a>
-                                <a href="{% url 'sections' %}">Sections</a>
-                            </div>
-                        </div>
-                    </div>
+                    <li class="nav-menu-item active"><a href="{%url 'home'%}"><i class="bi bi-house-fill"> Home </i></a></li>
+                    {% else %}
+                    <li class="nav-menu-item"><a href="{%url 'index'%}"><i class="bi bi-house-fill"> Home </i></a></li>
                     {% endif %}
-                </li>
-                {% endblock navbar %}
-
-                <li><a href="{% url 'about' %}">About</a></li>
-
-                <li class="left">
                     {% if request.user.is_authenticated %}
-                        {% if user.profile %}
-                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" width="42" height="42"/>
-                        {% endif %}
+                    <li class="nav-menu-item"><a>Library</a>
+                        <ul class="nav-submenu">
+                            <li class="nav-submenu-item"><a href="{% url 'books' %}">Books</a></li>
+                            <li class="nav-submenu-item"><a href="{% url 'authors' %}">Authors</a></li>
+                            <li class="nav-submenu-item"><a href="{% url 'publishers' %}">Publishers</a></li>
+                            <li class="nav-submenu-item"><a href="{% url 'genres' %}">Genres</a></li>
+                            <li class="nav-submenu-item"><a href="{% url 'collections' %}">Collections</a></li>
+                            <li class="nav-submenu-item"><a href="{% url 'sections' %}">Sections</a></li>
+                        </ul>    
+                    </li>
                     {% endif %}
-                </li>
-
-
-                {% if request.user.is_authenticated %}
-                <li class="right">
-                    <div class="dropdown right">
-                        <button class="dropbtn" style="background-color: rgb(244, 127, 255); margin: 0%; padding: 0%;">
-                            {{ request.user }}
-                            <div style="background-color: rgb(127, 150, 255); float: left; margin: 0%; padding: 0%;">
-                                <p> </p>
-                            </div>
-                            <div style="background-color: aquamarine; float: left; margin: 0%; padding: 0%;">
-                                {% if user.profile %}
-                                <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" width="38" height="38" style="border-radius: 25px;"/>
-                                {% endif %}
-                            </div>
-                        </button>
-                        <div class="dropdown-content">
-                            <div class="dropdown-content">
-                                <a href="{% url 'profile' %}">Profile</a>
-                                <a href="{% url 'password_reset' %}">Change Password</a>
-                                <a href="{% url 'logout' %}?next=/">Logout</a>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                {% else %}
-                <li class="right">
-                    <a href="{% url 'login' %}">Login</a>
-                    <a href="{% url 'register' %}">Join Now</a>
-                </li>
-                {% endif %}
-
-            </ul>
+                    <li class="nav-menu-item"><a href="{% url 'about' %}">About</a>
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-menu-item right">
+                        <a href="{% url 'logout' %}?next=/" style="text-align: right;">
+                            <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" width="36" height="36"/>
+                            <span>Logout</span>
+                        </a>
+                        <ul class="nav-submenu">
+                            <li class="nav-submenu-item"><a href="{% url 'profile' %}">Profile</a></li>
+                            <li class="nav-submenu-item"><a href="{% url 'password_reset' %}">Change Password</a></li>
+                        </ul>
+                    {% else %}
+                    <li class="nav-menu-item right"><a href="{% url 'login' %}">Login</a>
+                        <ul class="nav-submenu">
+                            <li class="nav-submenu-item"><a href="{% url 'register' %}">Join Now</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </header>
 
         <main class="main">
