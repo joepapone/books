@@ -23,7 +23,7 @@
                     <li class="nav-menu-item"><a href="{%url 'index'%}"><i class="bi bi-house-fill"> Home </i></a></li>
                     {% endif %}
                     {% if request.user.is_authenticated %}
-                    <li class="nav-menu-item"><a>Library</a>
+                    <li class="nav-menu-item"><a href="{% url 'library' %}">Library</a>
                         <ul class="nav-submenu">
                             <li class="nav-submenu-item"><a href="{% url 'books' %}">Books</a></li>
                             <li class="nav-submenu-item"><a href="{% url 'authors' %}">Authors</a></li>
@@ -58,36 +58,36 @@
 
         <main class="main">
             <div class="container">
+                {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert alert-{{message.tags}}">
+                            <span class="alert-btn" onclick="this.parentElement.style.display='none';">&times;</span>{{message}}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{message.tags}}">
-                        <span class="alert-btn" onclick="this.parentElement.style.display='none';">&times;</span>{{message}}
-                    </div>
-                {% endfor %}
-            {% endif %}
+                {%block content %}
+                {%endblock content%}
 
-            {%block content %}
-            {%endblock content%}
-
-            {% block pagination %}
-                {% if is_paginated %}
-                    <div class="pagination">
+                {% block pagination %}
+                    {% if is_paginated %}
+                    <div class="pagination-panel">
                         <span class="page-links">
                             {% if page_obj.has_previous %}
-                                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">« previous - </a>
                             {% endif %}
                             <span class="page-current">
-                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
                             </span>
                             {% if page_obj.has_next %}
-                                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}"> - next »</a>
                             {% endif %}
                         </span>
                     </div>
-                {% endif %}
-            {% endblock %}
-
+                    {% endif %}
+                {% endblock %}
             </div>
         </main>
 

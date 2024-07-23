@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header-panel">
+	<h2>My books</h2>
+</div>
+
+<div class="container">
+
+</div>
+<div class="panel-row">
+	<div class="side-panel vw-15">
+		<ol>
+			<li style="background-color: darkslategray; border-radius: 10px; padding: 2px; color: white;"><a href="" style="color: white;">Favorites</a></li>
+			<li><a href="">Wishlist</a></li>
+			<li><a href="">To Read</a></li>
+			<li><a href="">Loaded</a></li>
+			<li><a href="">Sold</a></li>
+		</ol>
+	</div>
+	<div class="side-panel vw-80">
+		{% for book in object_list %}
+		<div class="book">
+			<div class="book-title">
+				<p><strong>{{ book.title }}</strong></p>
+			</div>
+	
+			<div class="book-image">
+				<a href="{%url 'book' book.id %}">
+					{% if book.image %}
+					<img src="{{ book.image.url }}" alt="{{ book.title }}" class="image"  accept=".png" width="200" height="300"/>
+					{% endif %}
+				</a>
+			</div>
+	
+			<div class="book-info">
+				<div class="book-text">
+					<p class="italic">{{ book.author }}</p>
+				</div>
+				<div class="book-text">
+					<p class="bold"><strong>{{ book.genre }}</strong></p>
+				</div>
+				<div class="book-text">
+					<p><strong>ISBN: </strong>{{ book.isbn }}</p>
+				</div>
+			</div>
+	
+			<div class="book-rating">
+				<div class="rating">
+					<span class="star checked">&#9733;</span>
+					<span class="star {% if book >= 2 %}checked{% endif %}">&#9733;</span>
+					<span class="star {% if book >= 3 %}checked{% endif %}">&#9733;</span>
+					<span class="star {% if book >= 4 %}checked{% endif %}">&#9733;</span>
+					<span class="star {% if book == 5 %}checked{% endif %}">&#9733;</span>
+				</div>
+			</div>
+	
+		</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

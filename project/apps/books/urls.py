@@ -3,6 +3,8 @@ from apps.books import views
 
 
 urlpatterns = [
+    path('library/', views.LibraryList.as_view(),name='library'),
+
     path('books/', views.BookList.as_view(),name='books'),
     path('book/<int:pk>/', views.BookDetail.as_view(),name='book'),
     path('book/add/', views.BookCreate.as_view(),name='book-add'),

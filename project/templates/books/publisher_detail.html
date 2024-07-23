@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
- <article class="list">
-	<header>
-		<h2>{{ publisher.name }}</h2>
-	</header>
-	<p>{{publisher.description}}</p>
-	<br>
-	<a class="btn btn-primary cta" href="{% url 'publishers' %}"> « Back </a>
-</article>
+<div class="center-panel">
+	<article class="list">
+		<header>
+			<h2>{{ publisher.name }}</h2>
+		</header>
+		<p>{{publisher.description}}</p>
+		<br>
+		<a class="btn btn-primary cta" href="{% url 'publishers' %}"> « Back </a>
+	</article>
+</div>
 {% endblock content %}

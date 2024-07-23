@@ -12,6 +12,21 @@ from django.contrib.auth.models import User
 from apps.books.models import Book, Author, Publisher, Genre, Section, Collection
 
 
+# --- Library --- #
+class LibraryList(LoginRequiredMixin, ListView):
+    login_url = "/login/"
+    redirect_field_name = "redirect_to"
+
+    model = Book
+    context_object_name = 'mybooks'
+    template_name = 'books/library_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['mybooks'] = context['mybooks']
+        return context
+    
+
 # --- Books --- #
 class BookList(LoginRequiredMixin, ListView):
     login_url = "/login/"
@@ -73,7 +88,7 @@ class BookDelete(LoginRequiredMixin, DeleteView):
 class AuthorList(LoginRequiredMixin, ListView):
     model = Author
     context_object_name = 'authors'
-    paginate_by = 2
+    paginate_by = 10
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

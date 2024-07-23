@@ -11,11 +11,11 @@
 	<ul class="list">
 		{% for book in object_list %}
 			<li><a href="{%url 'book' book.id %}">{{ book.title }}</a>
-				 <div  class="list-controls">
-				 	<a href="{%url 'book-delete' book.id %}"><i class="bi bi-trash"></i></a>
+					<div  class="list-controls">
+						<a href="{%url 'book-delete' book.id %}"><i class="bi bi-trash"></i></a>
 					<a href="{%url 'book-update' book.id %}"><i class="bi bi-pencil-square"></i></a>
-		         </div>
-		    </li>
+					</div>
+			</li>
 		{% endfor %}
 	{% endif %}
 	</ul>
