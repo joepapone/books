@@ -1,61 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="header-panel">
-	<h2>My books</h2>
-</div>
-
 <div class="container">
 
 </div>
 <div class="panel-row">
 	<div class="side-panel vw-15">
-		<ol>
-			<li style="background-color: darkslategray; border-radius: 10px; padding: 2px; color: white;"><a href="" style="color: white;">Favorites</a></li>
-			<li><a href="">Wishlist</a></li>
-			<li><a href="">To Read</a></li>
-			<li><a href="">Loaded</a></li>
-			<li><a href="">Sold</a></li>
-		</ol>
+		<h2>My books</h2>
+		<div class="book-list">
+			<ol>
+				<li><a href="{% url 'library-all' %}">All</a></li>
+				<li><a href="{% url 'library-favorites' %}">Favorites</a></li>
+				<li><a href="">Wishlist</a></li>
+				<li><a href="">To Read</a></li>
+				<li><a href="">Loaded</a></li>
+				<li><a href="">Sold</a></li>
+			</ol>
+		</div>
+		<p class="text-center">Items found {{ object_list|length }}</p>
 	</div>
 	<div class="side-panel vw-80">
-		{% for book in object_list %}
+		{% for item in object_list %}
 		<div class="book">
 			<div class="book-title">
-				<p><strong>{{ book.title }}</strong></p>
+				<p><strong>{{ item.book.title }}</strong></p>
 			</div>
 	
 			<div class="book-image">
-				<a href="{%url 'book' book.id %}">
-					{% if book.image %}
-					<img src="{{ book.image.url }}" alt="{{ book.title }}" class="image"  accept=".png" width="200" height="300"/>
+				<a href="{%url 'book-detail' item.book.id %}">
+					{% if item.book.image %}
+					<img src="{{ item.book.image.url }}" alt="{{ item.book.title }}" class="image"  accept=".png" width="200" height="300"/>
 					{% endif %}
 				</a>
 			</div>
 	
 			<div class="book-info">
 				<div class="book-text">
-					<p class="italic">{{ book.author }}</p>
+					<p class="italic">{{ item.book.author }}</p>
 				</div>
 				<div class="book-text">
-					<p class="bold"><strong>{{ book.genre }}</strong></p>
+					<p class="bold"><strong>{{ item.book.genre }}</strong></p>
 				</div>
 				<div class="book-text">
-					<p><strong>ISBN: </strong>{{ book.isbn }}</p>
+					<p><strong>ISBN: </strong>{{ item.book.isbn }}</p>
 				</div>
 			</div>
 	
 			<div class="book-rating">
-				<div class="rating">
-					<span class="star checked">&#9733;</span>
-					<span class="star {% if book >= 2 %}checked{% endif %}">&#9733;</span>
-					<span class="star {% if book >= 3 %}checked{% endif %}">&#9733;</span>
-					<span class="star {% if book >= 4 %}checked{% endif %}">&#9733;</span>
-					<span class="star {% if book == 5 %}checked{% endif %}">&#9733;</span>
-				</div>
+                <form method="POST" enctype="multipart/form-data" class="rate-form">
+                    <div class="rating">
+                        {% csrf_token %}
+						<input type="hidden" name="id" value="{{ item.book.id}}">
+						<button type="submit" class="star {% if item.rating >= 1 %}checked{% endif %}" name="stars" value="1">&#9733;</button>
+						<button type="submit" class="star {% if item.rating >= 2 %}checked{% endif %}" name="stars" value="2">&#9733;</button>
+						<button type="submit" class="star {% if item.rating >= 3 %}checked{% endif %}" name="stars" value="3">&#9733;</button>
+						<button type="submit" class="star {% if item.rating >= 4 %}checked{% endif %}" name="stars" value="4">&#9733;</button>
+						<button type="submit" class="star {% if item.rating == 5 %}checked{% endif %}" name="stars" value="5">&#9733;</button>
+                    </div>
+                </form>
 			</div>
-	
-		</div>
+
+        </div>
 		{% endfor %}
 	</div>
 </div>

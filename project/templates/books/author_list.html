@@ -10,7 +10,7 @@
 	{% if object_list %}
 	<ul class="list">
 		{% for author in object_list %}
-			<li><a href="{%url 'author' author.id %}">{{ author.first_name }} {{ author.last_name }}</a>
+			<li><a href="{%url 'author-detail' author.id %}">{{ author.first_name }} {{ author.last_name }}</a>
 				 <div  class="list-controls">
 				 	<a href="{%url 'author-delete' author.id %}"><i class="bi bi-trash"></i></a>
 					<a href="{%url 'author-update' author.id %}"><i class="bi bi-pencil-square"></i></a>

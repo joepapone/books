@@ -1,32 +1,96 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse, reverse_lazy
+from django.http import HttpResponseForbidden
+from django import forms
 from django.views import View
 from django.views.generic import ListView, RedirectView
 from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
-from django.views.generic.detail import DetailView
+from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User
-from apps.books.models import Book, Author, Publisher, Genre, Section, Collection
+from apps.books.models import Book, Author, Publisher, Genre, Section, Collection, Rating
 
 
 # --- Library --- #
-class LibraryList(LoginRequiredMixin, ListView):
-    login_url = "/login/"
-    redirect_field_name = "redirect_to"
+class RatingForm(forms.Form):
+    model = Rating
 
-    model = Book
-    context_object_name = 'mybooks'
+
+class LibraryBookRating(SingleObjectMixin, FormView):
+    form_class = RatingForm
+    model = Rating
+    
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+
+        rating = request.POST.get('stars')
+        book_id= request.POST.get('id')
+        created_by = self.request.user
+        
+        # Use defaults for updating and create_defaults for creating new record
+        obj, created = Rating.objects.update_or_create(
+            book_id=book_id,
+            defaults={'book_id': book_id, 'rating': rating, 'created_by': created_by,},
+            create_defaults={'book_id': book_id, 'rating': rating, 'created_by': created_by,},
+            )
+
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        # Define redirect according to request path
+        viewname='library-all'
+        if self.request.path == '/library/favourites':
+            viewname = 'library-favorites'
+
+        return reverse(viewname)
+
+
+class LibraryListAll(ListView):
     template_name = 'books/library_list.html'
+    model = Rating
+    context_object_name = 'object_list'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['mybooks'] = context['mybooks']
         return context
     
 
+class LibraryListFavorites(ListView):
+    template_name = 'books/library_list.html'
+    model = Rating
+
+    def get_context_data(self, **kwargs):
+        # Base context implementation 
+        context = super().get_context_data(**kwargs)
+        # Context update
+        context["object_list"] = Rating.objects.filter(rating__gte=3).order_by('-rating')
+        return context
+
+
+class LibraryFavoritesView(ListView):
+    def get(self, request, *args, **kwargs):
+        view = LibraryListFavorites.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = LibraryBookRating.as_view()
+        return view(request, *args, **kwargs)
+    
+
+class LibraryAllView(View):  
+    def get(self, request, *args, **kwargs):
+        view = LibraryListAll.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = LibraryBookRating.as_view()
+        return view(request, *args, **kwargs)
+    
+    
 # --- Books --- #
 class BookList(LoginRequiredMixin, ListView):
     login_url = "/login/"
@@ -49,12 +113,17 @@ class BookDetail(LoginRequiredMixin, DetailView):
 class BookCreate(LoginRequiredMixin, CreateView):
     model = Book
     fields = ['isbn','title', 'author', 'copyright', 'publisher', 'edition', 'category', 'genre', 'language', 'comments' ]
-    success_url = reverse_lazy('books')
+    success_url = reverse_lazy('book-list')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         if 'image' in self.request.FILES:
             form.instance.image = self.request.FILES['image']
+
+        # Create record with default values
+        obj, created = Rating.objects.update_or_create(
+            book_id=form.instance.id,
+            create_defaults={'book_id': form.instance.id, 'rating': 0, 'created_by': self.request.user,})
 
         messages.success(self.request, "The book was added successfully.")
         return super(BookCreate,self).form_valid(form)
@@ -63,9 +132,18 @@ class BookCreate(LoginRequiredMixin, CreateView):
 class BookUpdate(LoginRequiredMixin, UpdateView):
     model = Book
     fields = ['isbn','title', 'author', 'copyright', 'publisher', 'edition', 'category', 'genre', 'language', 'comments']
-    success_url = reverse_lazy('books')
+    success_url = reverse_lazy('book-list')
         
     def form_valid(self, form):
+        
+        data = self.request.POST
+        value = data.get('id')
+        print(f'Post data {data}')
+        print(f'Post value {value}')
+        print(self.object)
+
+        print(f'Id {form.instance.id}')
+        
         form.instance.created_by = self.request.user
         if 'image' in self.request.FILES:
             form.instance.image = self.request.FILES['image']
@@ -77,7 +155,7 @@ class BookUpdate(LoginRequiredMixin, UpdateView):
 class BookDelete(LoginRequiredMixin, DeleteView):
     model = Book
     context_object_name = 'book'
-    success_url = reverse_lazy('books')
+    success_url = reverse_lazy('book-list')
     
     def form_valid(self, form):
         messages.success(self.request, "The book was deleted successfully.")
@@ -109,7 +187,7 @@ class AuthorDetail(LoginRequiredMixin, DetailView):
 class AuthorCreate(LoginRequiredMixin, CreateView):
     model = Author
     fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death','summary']
-    success_url = reverse_lazy('authors')  
+    success_url = reverse_lazy('author-list')  
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -123,7 +201,7 @@ class AuthorCreate(LoginRequiredMixin, CreateView):
 class AuthorUpdate(LoginRequiredMixin, UpdateView):
     model = Author
     fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death','summary']
-    success_url = reverse_lazy('authors')
+    success_url = reverse_lazy('author-list')
     
     def form_valid(self, form):
         form.instance.created_by = self.request.user        
@@ -137,7 +215,7 @@ class AuthorUpdate(LoginRequiredMixin, UpdateView):
 class AuthorDelete(LoginRequiredMixin, DeleteView):
     model = Author
     context_object_name = 'author'
-    success_url = reverse_lazy('authors')
+    success_url = reverse_lazy('author-list')
     
     def form_valid(self, form):
         messages.success(self.request, "The author was deleted successfully.")
@@ -163,7 +241,7 @@ class PublisherDetail(LoginRequiredMixin, DetailView):
 class PublisherCreate(LoginRequiredMixin, CreateView):
     model = Publisher
     fields = ['name','description']
-    success_url = reverse_lazy('publishers')
+    success_url = reverse_lazy('publisher-list')
     
 
     def form_valid(self, form):
@@ -175,7 +253,7 @@ class PublisherCreate(LoginRequiredMixin, CreateView):
 class PublisherUpdate(LoginRequiredMixin, UpdateView):
     model = Publisher
     fields = ['name','description']
-    success_url = reverse_lazy('publishers')
+    success_url = reverse_lazy('publisher-list')
     
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -186,7 +264,7 @@ class PublisherUpdate(LoginRequiredMixin, UpdateView):
 class PublisherDelete(LoginRequiredMixin, DeleteView):
     model = Publisher
     context_object_name = 'publisher'
-    success_url = reverse_lazy('publishers')
+    success_url = reverse_lazy('publisher-list')
     
     def form_valid(self, form):
         messages.success(self.request, "The publisher was deleted successfully.")
@@ -219,7 +297,7 @@ class GenreBooks(LoginRequiredMixin, ListView):
 class GenreCreate(LoginRequiredMixin, CreateView):
     model = Genre
     fields = ['name']
-    success_url = reverse_lazy('genres')
+    success_url = reverse_lazy('genre-list')
     
 
     def form_valid(self, form):
@@ -231,7 +309,7 @@ class GenreCreate(LoginRequiredMixin, CreateView):
 class GenreUpdate(LoginRequiredMixin, UpdateView):
     model = Genre
     fields = ['name']
-    success_url = reverse_lazy('genres')
+    success_url = reverse_lazy('genre-list')
     
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -242,7 +320,7 @@ class GenreUpdate(LoginRequiredMixin, UpdateView):
 class GenreDelete(LoginRequiredMixin, DeleteView):
     model = Genre
     context_object_name = 'genre'
-    success_url = reverse_lazy('genres')
+    success_url = reverse_lazy('genre-list')
     
     def form_valid(self, form):
         messages.success(self.request, "The genre was deleted successfully.")
@@ -263,7 +341,7 @@ class SectionList(LoginRequiredMixin, ListView):
 class SectionCreate(LoginRequiredMixin, CreateView):
     model = Section
     fields = ['name']
-    success_url = reverse_lazy('sections')
+    success_url = reverse_lazy('section-list')
     
 
     def form_valid(self, form):
@@ -275,7 +353,7 @@ class SectionCreate(LoginRequiredMixin, CreateView):
 class SectionUpdate(LoginRequiredMixin, UpdateView):
     model = Section
     fields = ['name']
-    success_url = reverse_lazy('sections')
+    success_url = reverse_lazy('section-list')
     
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -286,7 +364,7 @@ class SectionUpdate(LoginRequiredMixin, UpdateView):
 class SectionDelete(LoginRequiredMixin, DeleteView):
     model = Section
     context_object_name = 'section'
-    success_url = reverse_lazy('sections')
+    success_url = reverse_lazy('section-list')
     
     def form_valid(self, form):
         messages.success(self.request, "The section was deleted successfully.")
@@ -307,7 +385,7 @@ class CollectionList(LoginRequiredMixin, ListView):
 class CollectionCreate(LoginRequiredMixin, CreateView):
     model = Collection
     fields = ['name','description']
-    success_url = reverse_lazy('collections')
+    success_url = reverse_lazy('collection-list')
     
 
     def form_valid(self, form):
@@ -319,7 +397,7 @@ class CollectionCreate(LoginRequiredMixin, CreateView):
 class CollectionUpdate(LoginRequiredMixin, UpdateView):
     model = Collection
     fields = ['name','description']
-    success_url = reverse_lazy('collections')
+    success_url = reverse_lazy('collection-list')
     
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -330,7 +408,7 @@ class CollectionUpdate(LoginRequiredMixin, UpdateView):
 class CollectionDelete(LoginRequiredMixin, DeleteView):
     model = Collection
     context_object_name = 'collection'
-    success_url = reverse_lazy('collections')
+    success_url = reverse_lazy('collection-list')
     
     def form_valid(self, form):
         messages.success(self.request, "The collection was deleted successfully.")

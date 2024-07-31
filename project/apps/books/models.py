@@ -7,7 +7,7 @@ from pathlib import Path
 from django.urls import reverse
 import uuid
 
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.files.storage import FileSystemStorage
 fs = FileSystemStorage(location="/media/books")
 
@@ -242,7 +242,6 @@ class Status(models.Model):
 
 
 class BookInstance(models.Model):
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique ID for this particular book across whole library")
     book = models.ForeignKey(Book, on_delete=models.RESTRICT, null=True)
     imprint = models.CharField(max_length=200)
@@ -268,6 +267,21 @@ class BookInstance(models.Model):
 
     def __str__(self):
         return f'{self.book.title}'
+    
+
+class Rating(models.Model):
+    rating = models.IntegerField(default=0,
+        validators=[
+            MaxValueValidator(5),
+            MinValueValidator(0),
+        ])
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.book.title}: {self.rating}'
 
 
 '''

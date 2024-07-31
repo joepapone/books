@@ -129,7 +129,7 @@ LANGUAGES = [
        ('he', 'Hebrew'),
 ]
 
-LANGUAGES_BIDI = ['pt', 'es']
+LANGUAGES_BIDI = ['pt', 'en']
 
 LOCALE_PATHS = [
     "/home/www/project/common_files/locale",
