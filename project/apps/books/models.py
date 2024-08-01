@@ -149,13 +149,13 @@ class Book(models.Model):
     publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT, default=1, null=True)
     edition = models.IntegerField(default=1, null=True)
 
-    CATEGORIES = (
-        ('f', "fiction"),
-        ('n', "non-fiction"),
-        ('c', "children's"),
-    )
+    CATEGORY_CHOICES = {
+        'f': "Fiction",
+        'n': "Non-fiction",
+        'c': "Children's",
+    }
 
-    category = models.CharField(max_length=1, choices=CATEGORIES, blank=True, default='f', help_text='Book category')
+    category = models.CharField(max_length=1, choices=CATEGORY_CHOICES, blank=True, default='f', help_text='Book category')
     genre = models.ForeignKey(Genre, on_delete=models.RESTRICT, default=1, null=True)
     language = models.CharField(default=1, max_length=7, choices=LANGUAGES)
     comments = models.TextField(max_length=500, null=True, blank=True)
@@ -227,18 +227,29 @@ class Volume(models.Model):
         return f'{self.collection.name} ({self.number})'
 
 
-class Status(models.Model):
-    name = models.CharField(max_length=255)
+class Availability (models.Model):
     book = models.OneToOneField("Book", on_delete=models.CASCADE)
+
+    STATUS_CHOICES = {
+        'a': "Available",
+        'w': "Wish",
+        't': "To read",
+        'r': "Reserved",
+        'l': "Loaned",
+        's': "Sold",
+        'n': "Not found",
+    }
+
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, blank=True, default='a', help_text='Book availability')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["-name"]
+        ordering = ["-status"]
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.get_status_display()}'
 
 
 class BookInstance(models.Model):

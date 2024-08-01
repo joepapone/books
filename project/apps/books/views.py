@@ -11,7 +11,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User
-from apps.books.models import Book, Author, Publisher, Genre, Section, Collection, Rating
+from django.db.models import Q
+from apps.books.models import Book, Author, Publisher, Genre, Section, Collection, Rating, Availability
 
 
 # --- Library --- #
@@ -56,6 +57,10 @@ class LibraryListAll(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["object_list"] = Availability.objects.filter(Q(status='a') | Q(status='t')).order_by('book')
+        context['title'] = 'My Books'
+        print(f"All list: {[e.title for e in Book.objects.all().order_by('title')]}")
+        print(f'Join: {Book.objects.get(availability__book__id=1)}')
         return context
     
 
@@ -68,18 +73,62 @@ class LibraryListFavorites(ListView):
         context = super().get_context_data(**kwargs)
         # Context update
         context["object_list"] = Rating.objects.filter(rating__gte=3).order_by('-rating')
+        context['title'] = 'Favorites'
         return context
 
 
-class LibraryFavoritesView(ListView):
-    def get(self, request, *args, **kwargs):
-        view = LibraryListFavorites.as_view()
-        return view(request, *args, **kwargs)
+class LibraryWishList(ListView):
+    template_name = 'books/library_list.html'
+    model = Availability
 
-    def post(self, request, *args, **kwargs):
-        view = LibraryBookRating.as_view()
-        return view(request, *args, **kwargs)
-    
+    def get_context_data(self, **kwargs):
+        # Base context implementation 
+        context = super().get_context_data(**kwargs)
+        # Context update
+        context["object_list"] = Availability.objects.filter(status='w').order_by('-book_id')
+        print(f"Wish list: {[e.book.title for e in Availability.objects.filter(status='w').order_by('book')]}")
+        context['title'] = 'Wishlist'
+        return context
+
+
+class LibraryToRead(ListView):
+    template_name = 'books/library_list.html'
+    model = Availability
+
+    def get_context_data(self, **kwargs):
+        # Base context implementation 
+        context = super().get_context_data(**kwargs)
+        # Context update
+        context["object_list"] = Availability.objects.filter(status='t').order_by('-book_id')
+        context['title'] = 'To Read'
+        return context
+
+
+class LibraryLoaned(ListView):
+    template_name = 'books/library_list.html'
+    model = Availability
+
+    def get_context_data(self, **kwargs):
+        # Base context implementation 
+        context = super().get_context_data(**kwargs)
+        # Context update
+        context["object_list"] = Availability.objects.filter(status='l').order_by('book')
+        context['title'] = 'Loaned'
+        return context
+
+
+class LibrarySold(ListView):
+    template_name = 'books/library_list.html'
+    model = Availability
+
+    def get_context_data(self, **kwargs):
+        # Base context implementation 
+        context = super().get_context_data(**kwargs)
+        # Context update
+        context["object_list"] = Availability.objects.filter(status='s').order_by('book')
+        context['title'] = 'Sold'
+        return context
+
 
 class LibraryAllView(View):  
     def get(self, request, *args, **kwargs):
@@ -89,7 +138,58 @@ class LibraryAllView(View):
     def post(self, request, *args, **kwargs):
         view = LibraryBookRating.as_view()
         return view(request, *args, **kwargs)
+
+
+class LibraryFavoritesView(View):
+    def get(self, request, *args, **kwargs):
+        view = LibraryListFavorites.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = LibraryBookRating.as_view()
+        return view(request, *args, **kwargs)
     
+
+class LibraryWishView(View):
+    def get(self, request, *args, **kwargs):
+        view = LibraryWishList.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = LibraryBookRating.as_view()
+        return view(request, *args, **kwargs)
+
+
+class LibraryToReadView(View):
+    def get(self, request, *args, **kwargs):
+        view = LibraryToRead.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = LibraryBookRating.as_view()
+        return view(request, *args, **kwargs)
+
+
+class LibraryLoanedView(View):
+    def get(self, request, *args, **kwargs):
+        view = LibraryLoaned.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        print('post method')
+        view = LibraryBookRating.as_view()
+        return view(request, *args, **kwargs)
+
+
+class LibrarySoldView(View):
+    def get(self, request, *args, **kwargs):
+        view = LibrarySold.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = LibraryBookRating.as_view()
+        return view(request, *args, **kwargs)
+
     
 # --- Books --- #
 class BookList(LoginRequiredMixin, ListView):
@@ -147,6 +247,11 @@ class BookUpdate(LoginRequiredMixin, UpdateView):
         form.instance.created_by = self.request.user
         if 'image' in self.request.FILES:
             form.instance.image = self.request.FILES['image']
+
+        # Create record with default values
+        obj, created = Availability.objects.update_or_create(
+            book_id=form.instance.id,
+            create_defaults={'book_id': form.instance.id, 'status': 'w', 'created_by': self.request.user,})
 
         messages.success(self.request, "The book was updated successfully.")
         return super(BookUpdate,self).form_valid(form)

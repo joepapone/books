@@ -18,9 +18,9 @@
 			<p><b>Author: </b>{{ book.author.first_name }} {{ book.author.last_name }}</p>
 			<p><b>Publisher: </b>{{ book.publisher.name }}</p>
 			<p><b>Edition: </b>{{ book.edition }}</p>
-			<p><b>Category: </b>{{ book.category }}</p>
+			<p><b>Category: </b>{{ book.get_category_display }}</p>
 			<p><b>Genre: </b>{{ book.genre }}</p>
-			<p><b>Language: </b>{{ book.language.name }}</p>
+			<p><b>Language: </b>{{ book.get_language_display }}</p>
 			<p><b>Comments:</b>{{ book.comments}}</p>
 			<br>
 			<a class="btn btn-primary cta" href="{% url 'book-list' %}"> « Back </a>

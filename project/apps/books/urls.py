@@ -5,6 +5,10 @@ from apps.books import views
 urlpatterns = [
     path('library/', views.LibraryAllView.as_view(),name='library-all'),
     path('library/favourites', views.LibraryFavoritesView.as_view(),name='library-favorites'),
+    path('library/wishlist', views.LibraryWishView.as_view(),name='library-wishlist'),
+    path('library/toread', views.LibraryToRead.as_view(),name='library-toread'),
+    path('library/loaned', views.LibraryLoaned.as_view(),name='library-loaned'),
+    path('library/sold', views.LibrarySold.as_view(),name='library-sold'),
 
     path('books/', views.BookList.as_view(),name='book-list'),
     path('book/<int:pk>/', views.BookDetail.as_view(),name='book-detail'),

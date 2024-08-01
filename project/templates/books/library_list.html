@@ -6,15 +6,15 @@
 </div>
 <div class="panel-row">
 	<div class="side-panel vw-15">
-		<h2>My books</h2>
+		<h2>{{ title }}</h2>
 		<div class="book-list">
 			<ol>
 				<li><a href="{% url 'library-all' %}">All</a></li>
 				<li><a href="{% url 'library-favorites' %}">Favorites</a></li>
-				<li><a href="">Wishlist</a></li>
-				<li><a href="">To Read</a></li>
-				<li><a href="">Loaded</a></li>
-				<li><a href="">Sold</a></li>
+				<li><a href="{% url 'library-wishlist' %}">Wishlist</a></li>
+				<li><a href="{% url 'library-toread' %}">To Read</a></li>
+				<li><a href="{% url 'library-loaned' %}">Loaded</a></li>
+				<li><a href="{% url 'library-sold' %}">Sold</a></li>
 			</ol>
 		</div>
 		<p class="text-center">Items found {{ object_list|length }}</p>
