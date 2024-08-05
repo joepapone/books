@@ -4,14 +4,33 @@
 <div class="center-panel">
 	<div class="panel-row1">
 		<div class="side-panel vw-15">
-			<div class="large-image">
-				{% if book.image %}
-				<img src="{{ book.image.url }}" alt="{{ book.title }}" class="image"  accept=".png" width="200" height="300"/>
-				{% endif %}
-			</div>
+            <div class="book-container">
+                <div class="large-image">
+                    {% if book.image %}
+                    <img src="{{ book.image.url }}" alt="{{ book.title }}" class="image"  accept=".png" width="200" height="300"/>
+                    {% endif %}
+                </div>
+                <div class="book-rating">
+                    <form action={% url 'book-rating' %} method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="rating">
+                            <input type="hidden" name="id" value="{{ book.id }}">
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <button type="submit" class="star {% if book.rating.rating >= 1 %}checked{% endif %}" name="stars" value="1">&#9733;</button>
+                            <button type="submit" class="star {% if book.rating.rating >= 2 %}checked{% endif %}" name="stars" value="2">&#9733;</button>
+                            <button type="submit" class="star {% if book.rating.rating >= 3 %}checked{% endif %}" name="stars" value="3">&#9733;</button>
+                            <button type="submit" class="star {% if book.rating.rating >= 4 %}checked{% endif %}" name="stars" value="4">&#9733;</button>
+                            <button type="submit" class="star {% if book.rating.rating == 5 %}checked{% endif %}" name="stars" value="5">&#9733;</button>
+                        </div>
+                        <div class="btn-box">
+                            <button type="submit" class="btn btn-outline" name="stars" value="0">Clear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 		</div>
 		<div class="side-panel vw-35">
-			<header>
+			<header style="border-bottom: 2px solid #2b2b2b;">
 				<h2>{{ book.title }}</h2>
 			</header>
 			<p><b>ISBN: </b>{{ book.isbn }}</p>
@@ -26,52 +45,6 @@
 			<a class="btn btn-primary cta" href="{% url 'book-list' %}"> « Back </a>
 			<br>
 			<br>
-
-			<div class="rating-container">
-                <div class="container__items">
-
-                    <input type="radio" name="stars" id="st5">
-                    <label for="st5">
-                        <div class="star-stroke">
-                            <div class="star-fill"></div>
-                        </div>
-                        <div class="label-description" data-content="Excellent"></div>
-                    </label>
-                    
-                    <input type="radio" name="stars" id="st4">
-                    <label for="st4">
-                        <div class="star-stroke">
-                            <div class="star-fill"></div>
-                        </div>
-                        <div class="label-description" data-content="Good"></div>
-                    </label>
-
-                    <input type="radio" name="stars" id="st3">
-                    <label for="st3">
-                        <div class="star-stroke">
-                            <div class="star-fill"></div>
-                        </div>
-                        <div class="label-description" data-content="OK"></div>
-                    </label>
-
-                    <input type="radio" name="stars" id="st2">
-                    <label for="st2">
-                        <div class="star-stroke">
-                            <div class="star-fill"></div>
-                        </div>
-                        <div class="label-description" data-content="Bad"></div>
-                    </label>
-
-                    <input type="radio" name="stars" id="st1">
-                    <label for="st1">
-                        <div class="star-stroke">
-                            <div class="star-fill"></div>
-                        </div>
-                        <div class="label-description" data-content="Terrible"></div>
-                    </div>
-                </div>
-            </div>
-
 		</div>
 	</div>
 </div>

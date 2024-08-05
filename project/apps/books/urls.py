@@ -3,18 +3,19 @@ from apps.books import views
 
 
 urlpatterns = [
-    path('library/', views.LibraryAllView.as_view(),name='library-all'),
-    path('library/favourites', views.LibraryFavoritesView.as_view(),name='library-favorites'),
-    path('library/wishlist', views.LibraryWishView.as_view(),name='library-wishlist'),
-    path('library/toread', views.LibraryToRead.as_view(),name='library-toread'),
-    path('library/loaned', views.LibraryLoaned.as_view(),name='library-loaned'),
-    path('library/sold', views.LibrarySold.as_view(),name='library-sold'),
+    path('library/', views.LibraryListAllView.as_view(),name='library-all'),
+    path('library/favourites', views.LibraryListFavoritesView.as_view(),name='library-favorites'),
+    path('library/wishlist', views.LibraryListWishView.as_view(),name='library-wishlist'),
+    path('library/toread', views.LibraryListToReadView.as_view(),name='library-toread'),
+    path('library/loaned', views.LibraryListLoanedView.as_view(),name='library-loaned'),
+    path('library/sold', views.LibraryListSoldView.as_view(),name='library-sold'),
 
     path('books/', views.BookList.as_view(),name='book-list'),
     path('book/<int:pk>/', views.BookDetail.as_view(),name='book-detail'),
     path('book/add/', views.BookCreate.as_view(),name='book-add'),
     path('book/update/<int:pk>/', views.BookUpdate.as_view(),name='book-update'),
     path('book/delete/<int:pk>/', views.BookDelete.as_view(),name='book-delete'),
+    path('book/rating', views.BookRating.as_view(),name='book-rating'),
 
     path('authors/', views.AuthorList.as_view(),name='author-list'),
     path('author/<int:pk>/', views.AuthorDetail.as_view(),name='author-detail'),

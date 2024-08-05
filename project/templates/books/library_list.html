@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% load static %}
 <div class="container">
 
 </div>
@@ -17,49 +18,62 @@
 				<li><a href="{% url 'library-sold' %}">Sold</a></li>
 			</ol>
 		</div>
-		<p class="text-center">Items found {{ object_list|length }}</p>
+		<div class="search-container">
+			<form method="POST" enctype="multipart/form-data">
+				{%csrf_token %}
+				<div class="search-box">
+					<div class="search-text">
+						<input type="text" name="search" placeholder="Search?">
+					</div>
+					<div class="search-img">
+						<input type="image" name="submit" src="{% static 'images/find.png' %}" alt="Submit" width="20" height="20"/>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="count">
+			<p class="text-center">Items found: {{ object_list|length }}</p>
+		</div>
 	</div>
 	<div class="side-panel vw-80">
-		{% for item in object_list %}
+		{% for book in object_list %}
 		<div class="book">
 			<div class="book-title">
-				<p><strong>{{ item.book.title }}</strong></p>
+				<p><strong>{{ book.title }}</strong></p>
 			</div>
-	
 			<div class="book-image">
-				<a href="{%url 'book-detail' item.book.id %}">
-					{% if item.book.image %}
-					<img src="{{ item.book.image.url }}" alt="{{ item.book.title }}" class="image"  accept=".png" width="200" height="300"/>
+				<a href="{%url 'book-detail' book.id %}">
+					{% if book.image %}
+					<img src="{{ book.image.url }}" alt="{{ book.title }}" class="image"  accept=".png" width="200" height="300"/>
 					{% endif %}
 				</a>
 			</div>
 	
 			<div class="book-info">
 				<div class="book-text">
-					<p class="italic">{{ item.book.author }}</p>
+					<p class="italic">{{ book.author }}</p>
 				</div>
 				<div class="book-text">
-					<p class="bold"><strong>{{ item.book.genre }}</strong></p>
+					<p class="bold"><strong>{{ book.genre }}</strong></p>
 				</div>
 				<div class="book-text">
-					<p><strong>ISBN: </strong>{{ item.book.isbn }}</p>
+					<p><strong>ISBN: </strong>{{ book.isbn }}</p>
 				</div>
 			</div>
-	
 			<div class="book-rating">
-                <form method="POST" enctype="multipart/form-data" class="rate-form">
+                <form action={% url 'book-rating' %} method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
                     <div class="rating">
-                        {% csrf_token %}
-						<input type="hidden" name="id" value="{{ item.book.id}}">
-						<button type="submit" class="star {% if item.rating >= 1 %}checked{% endif %}" name="stars" value="1">&#9733;</button>
-						<button type="submit" class="star {% if item.rating >= 2 %}checked{% endif %}" name="stars" value="2">&#9733;</button>
-						<button type="submit" class="star {% if item.rating >= 3 %}checked{% endif %}" name="stars" value="3">&#9733;</button>
-						<button type="submit" class="star {% if item.rating >= 4 %}checked{% endif %}" name="stars" value="4">&#9733;</button>
-						<button type="submit" class="star {% if item.rating == 5 %}checked{% endif %}" name="stars" value="5">&#9733;</button>
+						<input type="hidden" name="id" value="{{ book.id }}">
+						<input type="hidden" name="next" value="{{ request.path }}">
+						<button type="submit" class="star {% if book.rating.rating >= 1 %}checked{% endif %}" name="stars" value="1">&#9733;</button>
+						<button type="submit" class="star {% if book.rating.rating >= 2 %}checked{% endif %}" name="stars" value="2">&#9733;</button>
+						<button type="submit" class="star {% if book.rating.rating >= 3 %}checked{% endif %}" name="stars" value="3">&#9733;</button>
+						<button type="submit" class="star {% if book.rating.rating >= 4 %}checked{% endif %}" name="stars" value="4">&#9733;</button>
+						<button type="submit" class="star {% if book.rating.rating == 5 %}checked{% endif %}" name="stars" value="5">&#9733;</button>
                     </div>
                 </form>
 			</div>
-
         </div>
 		{% endfor %}
 	</div>

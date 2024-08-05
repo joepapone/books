@@ -141,12 +141,56 @@ class Author(models.Model):
         return f'{self.first_name} {self.last_name}'    
 
 
+class Rating(models.Model):
+    rating = models.IntegerField(default=0,
+        validators=[
+            MaxValueValidator(5),
+            MinValueValidator(0),
+        ])
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.rating}'
+
+
+class Status (models.Model):
+
+    STATUS_CHOICES = {
+        'a': "Available",
+        'w': "Wish",
+        't': "To read",
+        'r': "Reserved",
+        'l': "Loaned",
+        's': "Sold",
+        'n': "Not found",
+    }
+
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, blank=True, default='a', help_text='Status ...')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-status"]
+
+    def __str__(self):
+        return f'{self.get_status_display()}'
+
+
+def get_sentinel_rating():
+    rating = Rating.objects.get_or_create()
+
+    print(f'Sentinel {rating.id}')
+    return 1
+
 class Book(models.Model):
-    isbn = models.CharField('ISBN', max_length=13, unique=True)
-    title = models.CharField(max_length=255, help_text='Title...')
-    author = models.ForeignKey(Author, on_delete=models.RESTRICT, default=1, null=True)
+    isbn = models.CharField('ISBN', max_length=13, unique=True, help_text='ISBN ...')
+    title = models.CharField(max_length=255, help_text='Title ...')
+    author = models.ForeignKey(Author, on_delete=models.RESTRICT, blank=True, null=True)
     copyright = models.PositiveIntegerField(null=True, default=current_year)
-    publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT, default=1, null=True)
+    publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT, blank=True, null=True)
     edition = models.IntegerField(default=1, null=True)
 
     CATEGORY_CHOICES = {
@@ -156,11 +200,13 @@ class Book(models.Model):
     }
 
     category = models.CharField(max_length=1, choices=CATEGORY_CHOICES, blank=True, default='f', help_text='Book category')
-    genre = models.ForeignKey(Genre, on_delete=models.RESTRICT, default=1, null=True)
-    language = models.CharField(default=1, max_length=7, choices=LANGUAGES)
-    comments = models.TextField(max_length=500, null=True, blank=True)
+    genre = models.ForeignKey(Genre, on_delete=models.RESTRICT, blank=True, null=True)
+    language = models.CharField(max_length=7, choices=LANGUAGES, blank=True, null=True)
+    comments = models.TextField(max_length=500, blank=True, null=True)
     image = models.ImageField(upload_to=upload_to_books, default='book.png', null=True)
-    created_by = models.ForeignKey(User, default=1, on_delete=models.CASCADE)
+    rating = models.ForeignKey(Rating, on_delete=models.RESTRICT, blank=True, null=True)
+    status = models.ForeignKey(Status, on_delete=models.RESTRICT, blank=True, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -227,31 +273,6 @@ class Volume(models.Model):
         return f'{self.collection.name} ({self.number})'
 
 
-class Availability (models.Model):
-    book = models.OneToOneField("Book", on_delete=models.CASCADE)
-
-    STATUS_CHOICES = {
-        'a': "Available",
-        'w': "Wish",
-        't': "To read",
-        'r': "Reserved",
-        'l': "Loaned",
-        's': "Sold",
-        'n': "Not found",
-    }
-
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, blank=True, default='a', help_text='Book availability')
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ["-status"]
-
-    def __str__(self):
-        return f'{self.get_status_display()}'
-
-
 class BookInstance(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique ID for this particular book across whole library")
     book = models.ForeignKey(Book, on_delete=models.RESTRICT, null=True)
@@ -279,21 +300,6 @@ class BookInstance(models.Model):
     def __str__(self):
         return f'{self.book.title}'
     
-
-class Rating(models.Model):
-    rating = models.IntegerField(default=0,
-        validators=[
-            MaxValueValidator(5),
-            MinValueValidator(0),
-        ])
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'{self.book.title}: {self.rating}'
-
 
 '''
 

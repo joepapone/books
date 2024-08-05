@@ -12,185 +12,90 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User
 from django.db.models import Q
-from apps.books.models import Book, Author, Publisher, Genre, Section, Collection, Rating, Availability
+from apps.books.models import Book, Author, Publisher, Genre, Section, Collection, Rating, Status
+from apps.books.forms import RatingForm
 
 
 # --- Library --- #
-class RatingForm(forms.Form):
-    model = Rating
-
-
-class LibraryBookRating(SingleObjectMixin, FormView):
-    form_class = RatingForm
-    model = Rating
-    
-    def post(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return HttpResponseForbidden()
-
-        rating = request.POST.get('stars')
-        book_id= request.POST.get('id')
-        created_by = self.request.user
-        
-        # Use defaults for updating and create_defaults for creating new record
-        obj, created = Rating.objects.update_or_create(
-            book_id=book_id,
-            defaults={'book_id': book_id, 'rating': rating, 'created_by': created_by,},
-            create_defaults={'book_id': book_id, 'rating': rating, 'created_by': created_by,},
-            )
-
-        return super().post(request, *args, **kwargs)
-
-    def get_success_url(self):
-        # Define redirect according to request path
-        viewname='library-all'
-        if self.request.path == '/library/favourites':
-            viewname = 'library-favorites'
-
-        return reverse(viewname)
-
-
-class LibraryListAll(ListView):
+class LibraryListAllView(ListView):
     template_name = 'books/library_list.html'
-    model = Rating
+    model = Book
     context_object_name = 'object_list'
     
     def get_context_data(self, **kwargs):
+        # Base context implementation 
         context = super().get_context_data(**kwargs)
-        context["object_list"] = Availability.objects.filter(Q(status='a') | Q(status='t')).order_by('book')
+        # Context update
+        context["object_list"] = Book.objects.select_related('status').filter(Q(status__status='a') | Q(status__status='t')).order_by('title')
         context['title'] = 'My Books'
-        print(f"All list: {[e.title for e in Book.objects.all().order_by('title')]}")
-        print(f'Join: {Book.objects.get(availability__book__id=1)}')
         return context
     
 
-class LibraryListFavorites(ListView):
+class LibraryListFavoritesView(ListView):
     template_name = 'books/library_list.html'
-    model = Rating
+    model = Book
 
     def get_context_data(self, **kwargs):
         # Base context implementation 
         context = super().get_context_data(**kwargs)
         # Context update
-        context["object_list"] = Rating.objects.filter(rating__gte=3).order_by('-rating')
+        context["object_list"] = Book.objects.select_related('rating').filter(rating__rating__gte=3).order_by('-rating__rating')
         context['title'] = 'Favorites'
         return context
 
 
-class LibraryWishList(ListView):
+class LibraryListWishView(ListView):
     template_name = 'books/library_list.html'
-    model = Availability
+    model = Book
 
     def get_context_data(self, **kwargs):
         # Base context implementation 
         context = super().get_context_data(**kwargs)
         # Context update
-        context["object_list"] = Availability.objects.filter(status='w').order_by('-book_id')
-        print(f"Wish list: {[e.book.title for e in Availability.objects.filter(status='w').order_by('book')]}")
+        context["object_list"] = Book.objects.select_related('status').filter(status__status='w').order_by('title')
         context['title'] = 'Wishlist'
         return context
 
 
-class LibraryToRead(ListView):
+class LibraryListToReadView(ListView):
     template_name = 'books/library_list.html'
-    model = Availability
+    model = Book
 
     def get_context_data(self, **kwargs):
         # Base context implementation 
         context = super().get_context_data(**kwargs)
         # Context update
-        context["object_list"] = Availability.objects.filter(status='t').order_by('-book_id')
+        context["object_list"] = Book.objects.select_related('status').filter(status__status='t').order_by('title')
         context['title'] = 'To Read'
         return context
 
 
-class LibraryLoaned(ListView):
+class LibraryListLoanedView(ListView):
     template_name = 'books/library_list.html'
-    model = Availability
+    model = Book
 
     def get_context_data(self, **kwargs):
         # Base context implementation 
         context = super().get_context_data(**kwargs)
         # Context update
-        context["object_list"] = Availability.objects.filter(status='l').order_by('book')
+        context["object_list"] = Book.objects.select_related('status').filter(status__status='l').order_by('title')
         context['title'] = 'Loaned'
         return context
 
 
-class LibrarySold(ListView):
+class LibraryListSoldView(ListView):
     template_name = 'books/library_list.html'
-    model = Availability
+    model = Book
 
     def get_context_data(self, **kwargs):
         # Base context implementation 
         context = super().get_context_data(**kwargs)
         # Context update
-        context["object_list"] = Availability.objects.filter(status='s').order_by('book')
+        context["object_list"] = Book.objects.select_related('status').filter(status__status='s').order_by('title')
         context['title'] = 'Sold'
         return context
 
 
-class LibraryAllView(View):  
-    def get(self, request, *args, **kwargs):
-        view = LibraryListAll.as_view()
-        return view(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        view = LibraryBookRating.as_view()
-        return view(request, *args, **kwargs)
-
-
-class LibraryFavoritesView(View):
-    def get(self, request, *args, **kwargs):
-        view = LibraryListFavorites.as_view()
-        return view(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        view = LibraryBookRating.as_view()
-        return view(request, *args, **kwargs)
-    
-
-class LibraryWishView(View):
-    def get(self, request, *args, **kwargs):
-        view = LibraryWishList.as_view()
-        return view(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        view = LibraryBookRating.as_view()
-        return view(request, *args, **kwargs)
-
-
-class LibraryToReadView(View):
-    def get(self, request, *args, **kwargs):
-        view = LibraryToRead.as_view()
-        return view(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        view = LibraryBookRating.as_view()
-        return view(request, *args, **kwargs)
-
-
-class LibraryLoanedView(View):
-    def get(self, request, *args, **kwargs):
-        view = LibraryLoaned.as_view()
-        return view(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        print('post method')
-        view = LibraryBookRating.as_view()
-        return view(request, *args, **kwargs)
-
-
-class LibrarySoldView(View):
-    def get(self, request, *args, **kwargs):
-        view = LibrarySold.as_view()
-        return view(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        view = LibraryBookRating.as_view()
-        return view(request, *args, **kwargs)
-
-    
 # --- Books --- #
 class BookList(LoginRequiredMixin, ListView):
     login_url = "/login/"
@@ -221,9 +126,14 @@ class BookCreate(LoginRequiredMixin, CreateView):
             form.instance.image = self.request.FILES['image']
 
         # Create record with default values
-        obj, created = Rating.objects.update_or_create(
-            book_id=form.instance.id,
-            create_defaults={'book_id': form.instance.id, 'rating': 0, 'created_by': self.request.user,})
+        book_rating = Rating(rating=0, created_by=self.request.user)
+        book_rating.save()
+        form.instance.rating = book_rating
+
+        # Create record with default values
+        book_status = Status(status=0, created_by=self.request.user)
+        book_status.save()
+        form.instance.status = book_status
 
         messages.success(self.request, "The book was added successfully.")
         return super(BookCreate,self).form_valid(form)
@@ -234,25 +144,11 @@ class BookUpdate(LoginRequiredMixin, UpdateView):
     fields = ['isbn','title', 'author', 'copyright', 'publisher', 'edition', 'category', 'genre', 'language', 'comments']
     success_url = reverse_lazy('book-list')
         
-    def form_valid(self, form):
-        
-        data = self.request.POST
-        value = data.get('id')
-        print(f'Post data {data}')
-        print(f'Post value {value}')
-        print(self.object)
-
-        print(f'Id {form.instance.id}')
-        
+    def form_valid(self, form):       
         form.instance.created_by = self.request.user
         if 'image' in self.request.FILES:
             form.instance.image = self.request.FILES['image']
-
-        # Create record with default values
-        obj, created = Availability.objects.update_or_create(
-            book_id=form.instance.id,
-            create_defaults={'book_id': form.instance.id, 'status': 'w', 'created_by': self.request.user,})
-
+        
         messages.success(self.request, "The book was updated successfully.")
         return super(BookUpdate,self).form_valid(form)
 
@@ -265,6 +161,34 @@ class BookDelete(LoginRequiredMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, "The book was deleted successfully.")
         return super(BookDelete,self).form_valid(form)
+
+
+class BookRating(FormView):
+    template_name = 'books/rating.html'
+
+    def post(self, request, *args, **kwargs):
+        # Proceed only if authenticated user
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+
+        # Extract redirect path
+        path= request.POST.get('next')
+        
+        if request.method == "POST":
+            # Create a form instance and populate it with data from POST request
+            form = RatingForm(request.POST)
+            # Check if form data has been validated
+            if form.is_valid():
+                # Extract cleaned data to load to database
+                dict = form.cleaned_data
+                rating = dict['stars']
+                book_id = dict['id']
+                rating_id = Book.objects.get(id=book_id).status_id
+
+                # Update changes to database
+                Rating.objects.filter(id=rating_id).update(rating=rating, created_by=self.request.user)
+        
+        return  redirect(path)
 
 
 # --- Authors --- #
@@ -523,6 +447,56 @@ class CollectionDelete(LoginRequiredMixin, DeleteView):
 
 
     '''
+
+        # Create record with default values
+        obj, created = Rating.objects.update_or_create(
+            rating=form.instance.id,
+            create_defaults={'rating': 0 , 'created_by': self.request.user,})
+        
+
+        # Create record with default values
+        obj, created = Status.objects.update_or_create(
+            book_id=form.instance.id,
+            create_defaults={'book_id': form.instance.id, 'status': 'a', 'created_by': self.request.user,})
+
+
+class LibraryAllView(View):  
+    def get(self, request, *args, **kwargs):
+        view = LibraryListAll.as_view()
+        return view(request, *args, **kwargs)
+
+
+
+class LibraryBookRating(SingleObjectMixin, FormView):
+    form_class = RatingForm1
+    model = Rating
+    
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+
+        rating = request.POST.get('stars')
+        book_id= request.POST.get('id')
+        created_by = self.request.user
+        
+        # Use defaults for updating and create_defaults for creating new record
+        obj, created = Rating.objects.update_or_create(
+            book_id=book_id,
+            defaults={'book_id': book_id, 'rating': rating, 'created_by': created_by,},
+            create_defaults={'book_id': book_id, 'rating': rating, 'created_by': created_by,},
+            )
+
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        # Define redirect according to request path
+        viewname='library-all'
+        if self.request.path == '/library/favourites':
+            viewname = 'library-favorites'
+
+        return reverse(viewname)
+
+
     def upload_file(request):
         if request.method == 'POST':
             form = UploadFileForm(request.POST, request.FILES)
