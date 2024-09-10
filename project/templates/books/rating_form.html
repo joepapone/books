@@ -1,0 +1,110 @@
+<div id="rating-stars-{{ book.id }}" class="rating-stars" data-book-id="{{ book.id }}">
+    {% for i in 5|star_range %}
+        <span class="star {% if book.rating >= i %}checked{% endif %}" data-value="{{ i }}">&#9733;</span>
+    {% endfor %}
+</div>
+
+<form id="rating-form-{{ book.id }}" class="rating-form" method="post" action="{% url 'rating_update' book.id %}">
+    {% csrf_token %}
+    <input type="hidden" class="rating-input" name="rating" value="">
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('rating-form-{{ book.id }}');
+        const stars = document.querySelectorAll('#rating-stars-{{ book.id }} .star');
+        const ratingInput = form.querySelector('.rating-input');
+
+        function getCsrfToken() {
+            return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        }
+
+        stars.forEach(star => {
+            star.addEventListener('click', function () {
+                const ratingValue = this.getAttribute('data-value');
+                ratingInput.value = ratingValue;
+
+                // Update UI to show selected stars
+                stars.forEach(s => s.classList.remove('checked'));
+                this.classList.add('checked');
+                let prev = this.previousElementSibling;
+                while (prev) {
+                    prev.classList.add('checked');
+                    prev = prev.previousElementSibling;
+                }
+
+                // Perform an AJAX POST request
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': getCsrfToken(),  // Include CSRF token
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Rating submitted: ' + data.rating);
+                    } else {
+                        console.error('Error submitting rating: ' + JSON.stringify(data.errors));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+
+            // Ensure that hovering updates the UI but does not affect the saved rating
+            star.addEventListener('mouseover', function () {
+                stars.forEach(s => s.classList.remove('checked'));
+                this.classList.add('checked');
+                let prev = this.previousElementSibling;
+                while (prev) {
+                    prev.classList.add('checked');
+                    prev = prev.previousElementSibling;
+                }
+            });
+
+            star.addEventListener('mouseout', function () {
+                stars.forEach(s => s.classList.remove('checked'));
+                const ratingValue = ratingInput.value;
+                if (ratingValue) {
+                    stars.forEach((s, index) => {
+                        if (index < ratingValue) {
+                            s.classList.add('checked');
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    .rating-stars {
+        margin: auto;
+        text-align: center;
+    }
+
+    .star {
+        font-size: 1.4rem;
+        cursor: pointer;
+        color: #4e4c4c;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .star.checked {
+        color: #f39c12;
+    }
+
+    .star:hover,
+    .star:hover ~ .star {
+        color: #f39c12;
+    }
+
+    /* Reset color of stars to the right of the hovered star */
+    .star:hover ~ .star {
+        color: #4e4c4c;
+    }
+</style>

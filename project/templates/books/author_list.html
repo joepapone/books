@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<h2>Authors</h2>
+	<hr>
+	<div class="list-controls">
+		<a href="{% url 'author_add' %}"><i class="bi bi-plus-circle"></i> Add</a>
+	</div>
+	{% if object_list %}
+	<ul class="list">
+		{% for author in object_list %}
+		<li><a href="{%url 'author_detail' author.id %}">{{ author.name }}</a>
+			<div  class="list-controls">
+				<a href="{%url 'author_delete' author.id %}"><i class="bi bi-trash"></i></a>
+				<a href="{%url 'author_update' author.id %}"><i class="bi bi-pencil-square"></i></a>
+			</div>
+		</li>
+		{% endfor %}
+	{% endif %}
+	</ul>
+</div>
+{% endblock content %}

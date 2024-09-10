@@ -1,0 +1,287 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-08-25 23:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apps/books/forms.py:22
+#, python-format
+msgid "%(value)s Requires a number between 0 and 5"
+msgstr ""
+
+#: apps/books/forms.py:214
+msgid "ISBN 13 code ..."
+msgstr ""
+
+#: apps/books/forms.py:215
+msgid "Title ..."
+msgstr ""
+
+#: apps/books/forms.py:216
+msgid "Copyright ..."
+msgstr ""
+
+#: apps/books/forms.py:217
+msgid "Edition ..."
+msgstr ""
+
+#: apps/books/forms.py:218
+msgid "Give some comments about the book ..."
+msgstr ""
+
+#: apps/books/forms.py:265 apps/books/forms.py:298 apps/books/forms.py:331
+#: apps/books/forms.py:364 apps/books/forms.py:397
+msgid "Name ..."
+msgstr ""
+
+#: apps/books/forms.py:266
+msgid "Summary ..."
+msgstr ""
+
+#: apps/books/forms.py:299 apps/books/forms.py:332 apps/books/forms.py:365
+#: apps/books/forms.py:398
+msgid "Description ..."
+msgstr ""
+
+#: apps/books/models.py:35 apps/books/models.py:125 apps/books/models.py:153
+#: apps/books/models.py:183 apps/books/models.py:211
+msgid "Name"
+msgstr ""
+
+#: apps/books/models.py:36
+msgid "Born"
+msgstr ""
+
+#: apps/books/models.py:37
+msgid "Died"
+msgstr ""
+
+#: apps/books/models.py:39
+msgid "Headshot"
+msgstr ""
+
+#: apps/books/models.py:46
+msgid "Summary"
+msgstr ""
+
+#: apps/books/models.py:63
+msgid "Date of birth cannot be in the future."
+msgstr ""
+
+#: apps/books/models.py:69
+msgid "Date of death cannot be before the date of birth."
+msgstr ""
+
+#: apps/books/models.py:126 apps/books/models.py:154 apps/books/models.py:184
+#: apps/books/models.py:212
+msgid "Description"
+msgstr ""
+
+#: apps/books/models.py:289
+msgid "Fiction"
+msgstr ""
+
+#: apps/books/models.py:290
+msgid "Non-fiction"
+msgstr ""
+
+#: apps/books/models.py:294
+msgid "ISBN"
+msgstr ""
+
+#: apps/books/models.py:298
+msgid "Title"
+msgstr ""
+
+#: apps/books/models.py:299
+msgid "Author"
+msgstr ""
+
+#: apps/books/models.py:300
+msgid "Copyright"
+msgstr ""
+
+#: apps/books/models.py:301
+msgid "Publisher"
+msgstr ""
+
+#: apps/books/models.py:302
+msgid "Edition"
+msgstr ""
+
+#: apps/books/models.py:303
+msgid "Category"
+msgstr ""
+
+#: apps/books/models.py:304
+msgid "Genre"
+msgstr ""
+
+#: apps/books/models.py:305
+msgid "Language"
+msgstr ""
+
+#: apps/books/models.py:306
+msgid "Comments"
+msgstr ""
+
+#: apps/books/models.py:308
+msgid "Cover image"
+msgstr ""
+
+#: apps/books/models.py:315
+msgid "Collection"
+msgstr ""
+
+#: apps/books/models.py:316
+msgid "Section"
+msgstr ""
+
+#: apps/books/models.py:317
+msgid "Rating"
+msgstr ""
+
+#: apps/books/models.py:318
+msgid "Status"
+msgstr ""
+
+#: apps/books/models.py:337
+msgid "The copyright year cannot be in the future."
+msgstr ""
+
+#: apps/books/models.py:340
+#, fuzzy
+#| msgid "El año del copyright debe ser posterior a 1440."
+msgid "The copyright year must be after 1440."
+msgstr "The copyright year must be after 1440"
+
+#: apps/books/validators.py:24
+msgid "Invalid ISBN-13 format."
+msgstr ""
+
+#: apps/books/validators.py:35
+msgid "Invalid ISBN-13 checksum."
+msgstr ""
+
+#: apps/books/validators.py:84
+#, python-brace-format
+msgid "A {model._meta.verbose_name} with this {field_name} already exists!"
+msgstr ""
+
+#: apps/books/validators.py:111
+msgid "Unsupported image format."
+msgstr ""
+
+#: apps/books/validators.py:114
+msgid "Invalid image file."
+msgstr "Imagem inválida"
+
+#: apps/books/views.py:36
+msgid "My Books"
+msgstr ""
+
+#: apps/books/views.py:48
+msgid "Favorites"
+msgstr ""
+
+#: apps/books/views.py:60
+msgid "Wishlist"
+msgstr ""
+
+#: apps/books/views.py:72
+msgid "To Read"
+msgstr ""
+
+#: apps/books/views.py:84
+msgid "Loaned"
+msgstr ""
+
+#: apps/books/views.py:96
+msgid "Sold"
+msgstr ""
+
+#: apps/books/views.py:161 apps/books/views.py:188
+msgid "The book was updated successfully."
+msgstr ""
+
+#: apps/books/views.py:198
+msgid "The book was deleted successfully."
+msgstr ""
+
+#: apps/books/views.py:272
+msgid "The author was added successfully."
+msgstr ""
+
+#: apps/books/views.py:294
+msgid "The author was updated successfully."
+msgstr ""
+
+#: apps/books/views.py:305
+msgid "The author was deleted successfully."
+msgstr ""
+
+#: apps/books/views.py:351
+msgid "The publisher was added successfully."
+msgstr ""
+
+#: apps/books/views.py:373
+msgid "The publisher was updated successfully."
+msgstr ""
+
+#: apps/books/views.py:385
+msgid "The publisher was deleted successfully."
+msgstr ""
+
+#: apps/books/views.py:442
+msgid "The genre was added successfully."
+msgstr ""
+
+#: apps/books/views.py:464
+msgid "The genre was updated successfully."
+msgstr ""
+
+#: apps/books/views.py:476
+msgid "The genre was deleted successfully."
+msgstr ""
+
+#: apps/books/views.py:569
+msgid "The collection was added successfully."
+msgstr ""
+
+#: apps/books/views.py:588
+msgid "The collection was updated successfully."
+msgstr ""
+
+#: apps/books/views.py:617
+msgid "The collection was deleted successfully."
+msgstr ""
+
+#: apps/books/views.py:736
+msgid "The section was updated successfully."
+msgstr ""
+
+#: apps/books/views.py:748
+msgid "The section was deleted successfully."
+msgstr ""
+
+#: apps/core/views.py:27
+msgid "Hi there welcome to our site"
+msgstr ""
+
+#: apps/core/views.py:40
+msgid "Welcome to our site!"
+msgstr ""

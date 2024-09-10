@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+<div class="container">
+
+</div>
+<div class="panel-row">
+	<div class="side-panel vw-15">
+		<div class="panel-title">
+			<h2>{{ title }}</h2>
+		</div>
+		<div class="panel-line"></div>
+		<br>
+
+		<div class="book-list">
+			<ol>
+				<li><a href="{% url 'library_all' %}">All</a></li>
+				<li><a href="{% url 'library_favorites' %}">Favorites</a></li>
+				<li><a href="{% url 'library_wishlist' %}">Wishlist</a></li>
+				<li><a href="{% url 'library_toread' %}">To Read</a></li>
+				<li><a href="{% url 'library_loaned' %}">Loaded</a></li>
+				<li><a href="{% url 'library_sale' %}">For Sale</a></li>
+				<li><a href="{% url 'library_sold' %}">Sold</a></li>
+			</ol>
+		</div>
+		
+		<br>
+		<hr>
+		<br>
+
+		<div class="search-container">
+			<form method="post" enctype="multipart/form-data">
+				{%csrf_token %}
+				<div class="search-box">
+					<div class="search-text">
+						<input type="text" name="search" placeholder="Search?">
+					</div>
+					<div class="search-img">
+						<input type="image" name="submit" src="{% static 'images/find.png' %}" alt="Submit" width="20" height="20"/>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<br>
+		<hr>
+		
+		<div class="count">
+			<p class="text-center">Items found: {{ object_list|length }}</p>
+		</div>
+		
+	</div>
+	<div class="side-panel vw-80">
+		{% for book in object_list %}
+		<div class="book">
+			<div class="book-title">
+				<p><strong>{{ book.title }}</strong></p>
+			</div>
+			<div class="book-image">
+				<a href="{%url 'book_detail' book.id %}?next={{ request.path|urlencode }}">
+					{% if book.cover_image %}
+					<img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="image"  accept=".png" width="200" height="300"/>
+					{% endif %}
+				</a>
+			</div>
+	
+			<div class="book-info">
+				<div class="book-text">
+					<p class="italic">{{ book.author }}</p>
+				</div>
+				<div class="book-text">
+					<p class="bold"><strong>{{ book.genre }}</strong></p>
+				</div>
+				<div class="book-text">
+					<p><strong>ISBN: </strong>{{ book.isbn }}</p>
+				</div>
+			</div>
+
+			<div class="book-rating">
+				<!-- Include the rating form -->
+				{% include 'books/rating_form.html' with book=book %}
+			</div>
+
+        </div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<form method="post" enctype="multipart/form-data" class="form-card">
+	 	{%csrf_token %}
+	 	<h2>{% if publisher %} Update {% else %} Add {% endif %} publisher</h2>
+
+         {% for field in form %}
+         <div class="form-group">
+             <label class="label">{{ field.label_tag }}</label>
+             {{ field }}
+ 
+             {% if field.errors %}
+             <ul class="errorlist">
+                 {% for error in field.errors %}
+                     <li>{{ error|striptags }}</li>
+                 {% endfor %}
+             </ul>
+             {% endif %}
+         </div>
+         {% endfor %}
+
+		<div class="form-buttons">
+			<input type="submit" value="Save" class="btn btn-primary"/>
+			<a href="{% url 'publisher_list' %}" class="btn btn-outline">Cancel</a>
+		</div>
+	</form>
+</div>
+{% endblock content %}

@@ -1,0 +1,23 @@
+{%extends 'base.html'%}
+
+{%load static %}
+
+<title>{% block title %}My amazing index{% endblock %}</title>
+
+{%block content%}
+	<section class="feature">
+		<div class="feature-content">
+			<h1>Index page</h1>
+			<p>{{description}}</p>	
+			<img src="{%static 'images/erp.png'%}" alt="" class="feature-image">
+			<br>
+			{% if request.user.is_authenticated %}
+			<br>
+			{% else %}
+			<br>
+			<a class="btn btn-primary cta" href="{% url 'register' %}">Get Started</a>
+			<br>
+			{% endif %}
+		</div>
+	</section>
+{%endblock content%}

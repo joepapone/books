@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<div class="panel-row">
+		<div class="side-panel vw-35">
+		   <form method="post" enctype="multipart/form-data" class="form-card">
+				{% csrf_token %}
+				<h2>Select books</h2>
+				<div>
+					<label>
+					  <input type="checkbox" id="select-all"> Select All / Unselect All
+					</label>
+				</div>
+				{{ form.non_field_errors }}
+				<ul class="image_checkbox">
+					{% for book in form.fields.books.queryset %}
+						<li>
+							<label for="book_{{ book.id }}">
+								<input type="checkbox" name="books" value="{{ book.id }}" id="book_{{ book.id }}"
+									{% if book in books_in_collection %} checked {% endif %}>
+								<img src="{{ book.cover_image.url }}" alt="{{ book.title }}" width="100" height="150">
+							</label>
+						</li>
+					{% endfor %}
+				</ul>
+				<div class="form-buttons">
+					<input type="submit" value="Save" class="btn btn-primary"/>
+					<a href="{% url 'collection_list' %}" class="btn btn-outline">Cancel</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script>
+		// JavaScript to handle select all/unselect all functionality
+		document.getElementById('select-all').addEventListener('change', function() {
+		  var checkboxes = document.querySelectorAll('input[name="{{ form.books.name }}"]');
+		  for (var checkbox of checkboxes) {
+			checkbox.checked = this.checked;
+		  }
+		});
+	</script>
+</div>
+{% endblock content %}

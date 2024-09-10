@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<h2>Sections</h2>
+	<hr>
+	<div class="list-controls">
+		<a href="{% url 'section_add' %}"><i class="bi bi-plus-circle"></i> Add</a>
+	</div>
+	{% if object_list %}
+	<ul class="list">
+		{% for section in object_list %}
+		<li><a href="{%url 'section_detail' section.id %}">{{ section.name }}</a>
+			<div  class="list-controls">
+				<a href="{%url 'section_delete' section.id %}"><i class="bi bi-trash"></i></a>
+				<a href="{%url 'section_update' section.id %}"><i class="bi bi-pencil-square"></i></a>
+			</div>
+		</li>
+		{% endfor %}
+	{% endif %}
+	</ul>
+</div>
+{% endblock content %}

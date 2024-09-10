@@ -1,0 +1,17 @@
+{%extends 'base.html'%}
+
+{%load static %}
+
+{% block title %}My amazing home{% endblock %}
+
+{%block content%}
+	<section class="feature">
+		<div class="feature-content">
+			<h1>Homepage</h1>
+			<p>{{ message }}</p>
+			<p><strong>Books:</strong> {{ num_books }}</p>
+			<p><strong>Authors:</strong> {{ num_authors }}</p>
+			<img src="{%static 'images/erp.png'%}" alt="" class="feature-image">
+		</div>
+	</section>
+{%endblock content%}

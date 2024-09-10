@@ -1,0 +1,47 @@
+1|9789726081890|1984|2024|1|2024-06-30 20:56:18.141667|2024-08-05 18:06:09.458189||books/9789726081890.png|en|1|2|1|f|3|1|1
+2|9788193387641|Animal Farm|2024|1|2024-07-01 23:03:40.933929|2024-08-05 23:15:34.806570||books/978819338764.png|en|1|2|1|f|1|2|2
+3|9789722336963|A AMEAÇA|2024|1|2024-07-01 23:43:18.711732|2024-08-05 23:14:46.103446|skkkksksks
+skksks|books/A_AMEAÇA.png|pt|2|2|1|f|1|3|3
+4|9789724137100|6 DE ABRIL '96|2024|1|2024-07-23 17:23:36.061525|2024-08-05 23:27:28.694708||books/9789724137100.png|pt||2|1|f|1|4|4
+5|9789722041454|A PRINCESA DE GELO|2024|1|2024-08-05 18:21:55.090336|2024-08-05 23:26:13.718966||books/9789722041454.png|pt|5|2|4|f|3|5|5
+6|9780446612791|2ND CHANCE|2024|1|2024-07-23 18:25:07.780302|2024-08-05 23:24:48.408795||books/9780446612791.png|en|3|2|1|f|2|6|6
+7|9789724127811|A CASA TORTA|2024|1|2024-07-23 18:26:31.820005|2024-08-05 23:16:08.597952||books/9789724127811.png|pt|4|2|1|f|1|7|7
+8|9789722065672|A MENINA NA FLORESTA|2024|1|2024-07-23 20:55:20.638319|2024-08-05 23:25:34.730725||books/9789722065672.png|pt|5|2|4|f|1|8|8
+9|9789722057738|O OLHAR DOS INOCENTES|2024|1|2024-07-23 20:57:02.169682|2024-08-05 23:26:45.980782||books/9789722057738.png|pt|5|2|1|f|3|9|9
+10|9789722050470|OS DIÁRIOS SECRETOS|2020|1|2024-07-23 20:57:54.321758|2024-08-05 23:26:59.400995||books/9789722050470.png|pt|5|2|1|f|3|10|10
+11|9789722052559|A SOMBRA DA SEREIA|2024|1|2024-08-05 18:19:59.099789|2024-08-05 18:32:47.307652||books/9789722052559.png|pt|5|2|4|f|3|11|11
+
+
+1|2024-06-30 13:58:34.204852|2024-07-23 22:53:23.837736|2|Eric Arthur Blair was an English novelist, poet, essayist, journalist, and critic who wrote under the pen name of George Orwell. His work is characterised by lucid prose, social criticism, opposition to totalitarianism, and support of democratic socialism. Wikipedia|1903-06-25|1950-01-21|George|Orwell|authors/1.png
+2|2024-06-30 21:33:36.668451|2024-06-30 21:37:09.367810|1|Kenneth Martin Follett, CBE, FRSL is a Welsh author of thrillers and historical novels who has sold more than 160 million copies of his works. Follett's commercial breakthrough came with the spy thriller Eye of the Needle. Wikipedia|1949-06-05||Ken|Follet|authors/2.png
+3|2024-07-01 21:33:28.450797|2024-08-05 23:24:16.030870|2|James Brendan Patterson is an American author. Among his works are the Alex Cross, Michael Bennett, Women's Murder Club, Maximum Ride, Daniel X, NYPD Red, Witch & Wizard, Private and Middle School series, as well as many stand-alone thrillers, non-fiction, and romance novels. Wikipedia|1947-03-22||James|Patterson|authors/3.png
+4|2024-07-23 18:27:11.243556|2024-07-23 21:26:43.269840|2|Dame Agatha Mary Clarissa Christie, Lady Mallowan, DBE was an English writer known for her 66 detective novels and 14 short story collections, particularly those revolving around fictional detectives Hercule Poirot and Miss Marple. Wikipedia|1890-09-15|1976-01-12|Agatha|Christy|authors/4.png
+5|2024-07-23 20:45:57.767731|2024-07-30 09:25:09.929956|2|Jean Edith Camilla Läckberg Sköld is a Swedish crime writer. As of the early-2010s, her work has been translated into more than 40 languages in 60 countries. She has been called "the rock star of Nordic noir." Wikipedia|1974-08-20||Camilla|Läckberg|authors/5.png
+
+1|ASA|Edições ASA · Baumgartner · A Pianista · Os Negócios do Macaco · O Sonho de Mariana · Os Gatos da Casa Amarela · Clarinha · Se eu Fosse Muito Alto · Quando O|2024-06-16 23:36:55.334680|2024-07-23 17:52:56.177806|2
+2|Editorial Presença|Editorial Presença
+https://www.presenca.pt
+4000 livros com entrega gratuita em Portugal continental para compras superiores a 20 €.|2024-06-16 23:38:04.129012|2024-06-29 20:23:30.978861|1
+3|Antígona||2024-06-30 10:26:50.598022|2024-07-30 09:25:15.139332|2
+4|Dom Quixote|Publicações Dom Quixote, Lda.|2024-08-05 18:32:24.113003|2024-08-05 18:32:24.113021|2
+
+
+                <!-- 
+                {% block pagination %}
+                    {% if is_paginated %}
+                    <div class="pagination-panel">
+                        <span class="page-links">
+                            {% if page_obj.has_previous %}
+                                <a href="?page={{ page_obj.previous_page_number }}">« previous - </a>
+                            {% endif %}
+                            <span class="page-current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                            </span>
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}"> - next »</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                {% endblock %}
+                -->

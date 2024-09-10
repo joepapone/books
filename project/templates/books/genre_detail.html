@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<div class="panel-row">
+		<div class="side-panel vw-15">
+		</div>
+		<div class="side-panel vw-35" >
+			<div class="panel-title">
+				<h2>{{ genre.name }}</h2>
+			</div>
+			<div class="panel-line"></div>
+			<p>{{ genre.description }}</p>
+			<br>
+			<div class="btn-box">
+				<a class="btn btn-primary cta" href="{% url 'genre_list' %}"> « Back </a>
+			</div>
+			<p><b>Number of books: {{ books.count }}</b></p>
+			<hr>
+			{% if books %}
+				{% for book in books %}
+				<div class="small-image">
+					<a href="{%url 'book_detail' book.id %}">
+						<img src="/media/{{ book.cover_image }}" alt="{{ book.title }}" class="image" width="100" height="150"/>
+					</a>
+				</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock content %}

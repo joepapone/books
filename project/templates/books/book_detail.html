@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<div class="panel-row1">
+
+		<div class="side-panel vw-15">
+            <div class="book-container1" >
+                <br>
+                <br>
+                <br>
+                <div class="large-image">
+                    {% if book.cover_image %}
+                    <a href="{%url 'book_update' book.id %}?next={{ request.path }}">
+						<img src="/media/{{ book.cover_image }}" alt="{{ book.title }}" class="image"  accept=".png" width="200" height="300"/>
+					</a>
+                    {% endif %}
+                </div>
+
+                <div class="book-info">
+					<div class="book-text">
+						<p>Average Rating: {{ average_rating }}</p>
+					</div>
+					<div class="book-text">
+						<p>({{ rating_count }} reviews)</p>
+					</div>
+					<div class="book-rating">
+						<!-- Include the rating form -->
+						{% include 'books/rating_form.html' with book=book %}
+					</div>
+				</div>
+
+            </div>
+		</div>
+
+		<div class="side-panel vw-35">
+            <div class="panel-title">
+				<h2>{{ book.title }}</h2>
+			</div>
+			<div class="panel-line"></div>
+				<p><b>ISBN: </b>
+					<a href="{%url 'book_update' book.id %}?next={{ request.path }}">
+						{{ book.isbn }}
+					</a>
+				</p>
+				<p><b>Author: </b>{{ book.author|default:"N/A" }}</p>
+				<p><b>Publisher: </b>{{ book.publisher|default:"N/A" }}</p>
+				<p><b>Edition: </b>{{ book.edition|default:"N/A" }}</p>
+				<p><b>Category: </b>{{ book.get_category_display }}</p>
+				<p><b>Genre: </b>{{ book.genre|default:"N/A" }}</p>
+				<p><b>Collection: </b>{{ book.collection }}</p>
+				<p><b>Volume: </b>{{ book.volume_number}}</p>
+				<p><b>Language: </b>
+					{% if book.language != None %}
+						{{ book.get_language_display }}
+					{% else %}
+						N/A
+					{% endif %}
+				</p>
+				<p><b>Price: </b>
+					<a href="{% url 'price_update' book.prices.first.id %}">
+						{{ book.prices.first.purchase_price }} {{ book.prices.first.get_currency_symbol }} ({{ book.prices.first.get_currency_name }})
+					</a>
+				</p>
+				<p><b>Status: </b>
+					<a href="{% url 'status_update' book.statuses.first.id %}">{{ book.get_dynamic_status_display }}</a>
+				</p>
+				<p><b>Comments:</b></p>
+					{% if book.comments|length != 0 %}
+						{{ book.comments }}
+					{% else %}
+						No comments ...
+					{% endif %}
+					<p>{{ book.comments }}</p>
+				<br>
+			<div class="btn-box">
+				<a class="btn btn-primary" href="{{ next_url }}"> « Back </a>
+			</div>
+		</div>
+        
+	</div>
+</div>
+{% endblock content %}

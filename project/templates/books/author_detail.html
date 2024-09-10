@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="center-panel">
+	<div class="panel-row">
+		<div class="side-panel vw-15">
+			<br>
+			<br>
+			<br>
+			<div class="large-image">
+				{% if author.headshot %}
+				<img src="{{ author.headshot.url }}" alt="{{ author.headshot }}" class="image" width="200" height="200" style="border-radius: 100px;"/>
+				{% endif %}
+			</div>
+		</div>
+		<div class="side-panel vw-35" >
+			<div class="panel-title">
+				<h2>{{ author.name }}</h2>
+			</div>
+			<div class="panel-line"></div>
+			<p><b>Born:</b> {{ author.date_of_birth }}</p>
+			<p><b>Died:</b> {{ author.date_of_death }}</p>
+			<p><b>Summary:</b></p>
+			<p>{{ author.summary }}</p>
+			<br>
+			<div class="btn-box">
+				<a class="btn btn-primary" href="{% url 'author_list' %}"> « Back </a>
+			</div>
+			<p><b>Number of books: {{ books.count }}</b></p>
+			<hr>
+			{% if books %}
+				{% for book in books %}
+				<div class="small-image">
+					<a href="{%url 'book_detail' book.id %}">
+						<img src="/media/{{ book.cover_image }}" alt="{{ book.title }}" class="image" width="100" height="150"/>
+					</a>
+				</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock content %}
